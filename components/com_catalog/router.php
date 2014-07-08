@@ -7,8 +7,8 @@ if (!defined('DS'))
 
 $admin_root=JPATH_ROOT.'/administrator/components/com_catalog/';
 
-require_once $admin_root.'libs/defines.php';
-require_once $admin_root.LIBS.INCLUDES;
+require_once JPATH_ROOT.DS.'libs/defines.php';
+require_once BASE_DIR.DS.LIBS.INCLUDES;
 oDirectory::loadClassesFromDirectory($admin_root.MODELS.DATA);
 oDirectory::loadClassesFromDirectory($admin_root.MODELS.LOGIC);
 

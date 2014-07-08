@@ -18,11 +18,11 @@ if(isset($_REQUEST['limitstart']))
 $obj = new sector($id);
 $lang = new languages(AuxTools::GetCurrentLanguageIDJoomla());
 
-$jspath = AuxTools::getJSPathFromPHPDir(JPATH_COMPONENT_ADMINISTRATOR); 
+$jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT); 
 
 ?>
 
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY19; ?>"></script>
+<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY; ?>"></script>
 <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
 <link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
 <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>

@@ -389,11 +389,11 @@ class AuxTools
 
     static function getRealIpAddr() 
     {
-        if (!empty(filter_input(INPUT_SERVER,'HTTP_CLIENT_IP'))) 
+        if (filter_input(INPUT_SERVER,'HTTP_CLIENT_IP')) 
         {   //check ip from share internet
             $ip = filter_input(INPUT_SERVER,'HTTP_CLIENT_IP');
         }
-        elseif (!empty(filter_input(INPUT_SERVER,'HTTP_X_FORWARDED_FOR'))) 
+        elseif (filter_input(INPUT_SERVER,'HTTP_X_FORWARDED_FOR')) 
         {   //to check ip is pass from proxy
             $ip = filter_input(INPUT_SERVER,'HTTP_X_FORWARDED_FOR');
         } 
@@ -666,20 +666,23 @@ class AuxTools
     {
         $needle = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT');
         $iswin = false;
-        if(stripos($phpdirpath, DS) === false)
+        if(stripos($phpdirpath, DIRECTORY_SEPARATOR) === false)
         {
             $iswin = true;
         }
         if($iswin === true)
         {
             $winDS = '\\';
-            $phpdirpath = str_replace($winDS, DS, $phpdirpath);
+            $phpdirpath = str_replace($winDS, DIRECTORY_SEPARATOR, $phpdirpath);
         }
-        $arr = explode($needle, $phpdirpath);
-        $path=DS;
+        if($needle!="")
+        {
+            $arr = explode($needle, $phpdirpath);
+        }
+        $path=DIRECTORY_SEPARATOR;
         if(isset($arr[1]))
         {
-        $path= DS.$arr[1];
+            $path.=DIRECTORY_SEPARATOR.$arr[1];
         }
         return $path;
     }

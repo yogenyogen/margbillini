@@ -2,6 +2,10 @@
 if (!defined('BASE_DIR'))
     define('BASE_DIR', dirname(dirname(__FILE__)));
 
+//if (!defined('DS'))
+    //define('DS', DIRECTORY_SEPARATOR);
+
+
 define('INCLUDES', 'includes.php');
 
 define('FACTORY', 'factory.php');

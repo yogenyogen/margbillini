@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension
+	type="module"
+	version="3.2"
+	client="site"
+	method="upgrade">
+	<name>mod_catalog_products</name>
+	<author>Joomla! Project</author>
+	<creationDate>July 2004</creationDate>
+	<copyright>Copyright (C) 2005 - 2013 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>elias@host.do</authorEmail>
+	<authorUrl>www.host.do</authorUrl>
+	<version>3.0.0</version>
+	<description>MOD_CATALOG_PRODUCTS_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_catalog_products">mod_catalog_products.php</filename>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>		
+                <filename>mod_catalog_products.xml</filename>
+	</files>
+        <config>
+	
+            <fields name="params">
+                <fieldset name="basic">
+                <field name="category" type="sql" default="1" 
+                       label="MOD_CATALOG_SELECT_CATEGORY" 
+                       query="SELECT DISTINCT CategoryId AS value, Name AS category FROM #__catalogcategorylang where LangId IN (Select Min(lang_id) as LangId from #__languages)" />
+                
+                </fieldset>
+            </fields>
+        
+        </config>
+</extension>

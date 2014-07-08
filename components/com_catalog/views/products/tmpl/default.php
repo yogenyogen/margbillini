@@ -17,11 +17,7 @@ if(isset($_REQUEST['cid']))
     $cid=$_REQUEST['cid'];
 }
 $ro=JFactory::getApplication()->getPathway();
-$path = "";
-foreach($ro->getPathwayNames() as $p)
-{
-    $path.=DS.AuxTools::SEFReady($p);
-}
+
 $cat = new bll_category($cid);
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
 $catlv = $cat->getLanguageValue($LangId);
@@ -42,31 +38,24 @@ if(($limitstart)!= 0)
 $products = $product->findAll('CategoryId', $cat->Id, true, 'Id', $limitstart, $elements_by_page);
 ?>
 <h1><?php echo JText::_('COM_CATALOG_CATALOG'); ?></h1>
-<div class="products-holder">
+<div class="products-holder" span="span12">
     <h4>
         <?php echo $catlv->Name; ?>
     </h4>
-    <p>
-        <?php echo $catlv->Description; ?>
-    </p>
     <div class="product-list">
             <?php foreach($products as $product): ?>
-            <div class="product">
+            <div class="product" class="span3">
                 <?php 
                 $img = $product->getMainImage();
                 $lval = $product->getLanguageValue($LangId);
-                if(strlen($img->ImageUrl)> 4)
-                    $image = $img->ImageUrl;
+                if(is_file(JPATH_ROOT.DS.$img->ImageThumb))
+                    $image = $img->ImageThumb;
                 else
                     $image='./components/com_catalog/images/no-image-listing.jpg';
 
                 ?>
-                <img class="lis-image" src="<?php echo $image; ?>" />
-                <h3><?php echo $lval->Name; ?></h3>
-                <form action="<?php echo $path.DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>" method="POST">
-                    <input name="pid" type="hidden" value="<?php echo $product->Id; ?>"/>
-                    <input type="submit" value="<?php echo JText::_('COM_CATALOG_PRODUCT_DETAIL'); ?>"/>
-                </form>
+                <a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><img class="lis-image" src="<?php echo $image; ?>" /></a>
+                <h3><a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
             </div>
             <?php endforeach; ?>
     </div>

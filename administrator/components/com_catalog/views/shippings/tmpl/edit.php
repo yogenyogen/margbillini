@@ -13,7 +13,7 @@ if(isset($_REQUEST['limitstart']))
 $obj = new bll_shippingmethod($id);
 $lang = new languages(AuxTools::GetCurrentLanguageIDJoomla());
 $languages = languages::GetLanguages();
-$jspath = AuxTools::getJSPathFromPHPDir(JPATH_COMPONENT_ADMINISTRATOR); 
+$jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT); 
 $cities = bll_shippingmethod::getCitiesFromMethod($obj->Id);
 
 $city = new cities(0);
@@ -26,7 +26,7 @@ foreach($all_cities as $c):
         $carr[$c->Id]=$c->Name;
 endforeach;
 ?>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY19; ?>"></script>
+<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY; ?>"></script>
 <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
 <link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
 <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>

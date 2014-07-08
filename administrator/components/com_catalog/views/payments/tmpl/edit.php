@@ -13,7 +13,7 @@ if(isset($_REQUEST['limitstart']))
 $obj = new bll_paymentmethod($id);
 $lang = new languages(AuxTools::GetCurrentLanguageIDJoomla());
 
-$jspath = AuxTools::getJSPathFromPHPDir(JPATH_COMPONENT_ADMINISTRATOR); 
+$jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT); 
 
 ?>
 

@@ -111,7 +111,7 @@ if(isset($_GET['cid']))
     <div class="span3">Total</div>
 </div>
 <div class="content_cart">
-    <form method="POST" id="cart" action="<?php echo JRoute::_('index.php?Itemid=116');?>">
+    <form method="POST" id="cart" action="<?php echo JRoute::_('index.php?option=com_catalog&view=sales&layout=payment');?>">
     <?php
     $total=0;
     foreach($productsid as $pid => $cant):

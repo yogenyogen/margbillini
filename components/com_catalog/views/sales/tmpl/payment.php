@@ -2,6 +2,7 @@
 $user= JFactory::getUser();
 $profile=JUserHelper::getProfile($user->id)->getProperties();
 $guest_disable = '';
+$jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT);
 
 if($user->guest == false && $user->id > 0)
     $guest_disable = 'disabled';
@@ -115,7 +116,7 @@ $locations= country::getLocationTree();
         {
         ?>
         $.ajax(
-            {url:'/identificate.html?login_redirect_uri=<?php echo urlencode('/planes.html?view=sales&redirect=1&cid='.$cid);?>&tmpl=component'}
+            {url:'<?php echo $jspath; ?>/index.php?option=com_users&view=login&login_redirect_uri=<?php echo urlencode('/planes.html?view=sales&redirect=1&cid='.$cid);?>&tmpl=component'}
           ).done(function(data){
               var str=data;
               var arr=str.split("</head>");

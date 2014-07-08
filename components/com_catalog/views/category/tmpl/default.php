@@ -21,37 +21,43 @@ $LangId = AuxTools::GetCurrentLanguageIDJoomla();
 $category = new bll_category(0);
 $root_categories = bll_category::getRootCategories();
 ?>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY19; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
-<link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" /> 
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . MASKED_INPUTS_JQUERY; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>
 
 <?php 
 if(count($root_categories) > 0):    
 ?>
 <div id="category_block">
-	<div id="categories">
-		<ul id="cat-list">
+	<div id="categories" class="span12">
 	        <?php
 	        $index=1;
 	        foreach($root_categories as $rcat):
 	            
                     $lval=$rcat->getLanguageValue($LangId);
-                    $url=$path.DS.AuxTools::SEFReady(bll_category::generateSEFUrl($rcat->Id, $LangId)).".html";
-	               ?>
-	                <li id="category-<?php echo $rcat->Id ?>" class="category">
-	                    <a href="<?php echo $url; ?>">
+                    $url=DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.
+                         AuxTools::SEFReady(bll_category::generateSEFUrl($rcat->Id, $LangId)).".html";
+	            if(is_file(JPATH_ROOT.DS.$rcat->ThumbUrl))
+                    {
+                        $imguri = $rcat->ThumbUrl;
+                    }
+                    else
+                    {
+                        $imguri="./components/com_catalog/images/no-image-category.jpg";
+                    }   
+                    ?>   
+                        <div class="span3" id="category-<?php echo $rcat->Id ?>" class="category">
+	                    <a href="./index.php/<?php echo $url; ?>">
+                                <img src="<?php echo $imguri; ?>" />
+                            </a>
+                            <a href="./index.php/<?php echo $url; ?>">
 	                    <?php 
 	                        echo $lval->Name;
 	                    ?>
 	                    </a>
-	                </li>
+	                </div>
 	                <?php
 	            $index++;
 	        endforeach;
 	        ?>
-	    </ul>
+	    </div>
 	</div>
 </div>
     <?php
