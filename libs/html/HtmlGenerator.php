@@ -204,6 +204,7 @@ class HtmlGenerator {
         
         foreach($data as $k => $v)
         {
+            if($k != "limitstart")
             $datahtml.='<input type="hidden" name="'.$k.'" value="' . $v . '" />';
         }
         
