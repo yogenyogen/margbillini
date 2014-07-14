@@ -57,10 +57,6 @@ foreach($objs as $obj)
                  <input type="hidden" name="limitstart" value="<?php echo $lower_limit; ?>" />
                  <button><?php echo JText::_('COM_CATALOG_EDIT')?></button>
             </form>
-             <form method="POST" action="./index.php?option=com_catalog&view=sector">
-                 <input type="hidden"  name="cid" value="<?php echo $obj->Id; ?>"/>
-                 <button><?php echo JText::_('COM_CATALOG_MANAGE_SECTORS')?></button>
-            </form>
             <a class="button" href="./index.php?option=com_catalog&view=cities&action=delete&id=<?php echo $obj->Id; ?>">
             <?php echo JText::_('COM_CATALOG_DELETE')?>
             </a>

@@ -43,6 +43,10 @@ $doc->addStyleSheet('templates/'.$this->template.'/css/template.css');
 
 // Load optional RTL Bootstrap CSS
 JHtml::_('bootstrap.loadCss', false, $this->direction);
+if(!defined('DS'))
+{
+    define('DS', DIRECTORY_SEPARATOR);
+}
 require_once JPATH_ROOT.'/libs/defines.php';
 require_once BASE_DIR.DS.LIBS.INCLUDES;
 // Add current user information
@@ -133,9 +137,10 @@ else
 	<!--[if lt IE 9]>
 		<script src="<?php echo $this->baseurl ?>/media/jui/js/html5.js"></script>
 	<![endif]-->
-        <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY; ?>"></script>
-        <script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
-        <link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />
+        <script type="text/javascript" src="./<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
+        <link rel="stylesheet" href="./<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />        
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
 </head>
 
 <body class="site <?php echo $option

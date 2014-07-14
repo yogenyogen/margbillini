@@ -154,9 +154,6 @@ class CatalogController extends JControllerLegacy
         $region=$input->getInt('region', 0);
         $re_object = new province($region);
         $input->set('region', $re_object->Name);
-        $sector=$input->getInt('sector', 0);
-        $se_object = new sector($sector);
-        $input->set('sector', $se_object->Name);
         //end setting the location values
         $intertal_sale_fail_redirect=$input->getString("internal_sale_fail_redirect",
                 "");
@@ -171,7 +168,6 @@ class CatalogController extends JControllerLegacy
             $city = $input->getString('city', "");
             $dob = $input->getString('dob', "");
             $region=$input->getString('region', "");
-            $sector=$input->getString('sector', "");
             $address1 = $input->getString('address1', "");
             $address2 = $input->getString('address2', "");
             $postal_code = $input->getString('postal_code', "");
@@ -182,7 +178,6 @@ class CatalogController extends JControllerLegacy
                 'city'=>$city,
                 'dob'=>$dob,
                 'region'=>$region,
-                'sector'=>$sector,
                 'address1'=>$address1,
                 'address2'=>$address2,
                 'postal_code'=>$postal_code,

@@ -52,16 +52,16 @@ if(isset($_GET['cid']))
 ?>
 
 <script>
-  $(function() {
+  jQuery(function() {
       var min = 0;
       var max = 1000;
-    $( ".spinner" ).spinner({
+    jQuery( ".spinner" ).spinner({
       spin: function( event, ui ) {
         if ( ui.value > max ) {
-          $( this ).spinner( "value", min );
+          jQuery( this ).spinner( "value", min );
             return false;
         } else if ( ui.value < min ) {
-          $( this ).spinner( "value", max );
+          jQuery( this ).spinner( "value", max );
             return false;
         }
       },
@@ -78,25 +78,25 @@ if(isset($_GET['cid']))
                 var id = ids[ids.length-1];
                 var ptotal = prices[i].value*cant[i].value;
                 total+=ptotal;
-                $('#total_'+id).html(cur+ptotal);
+                jQuery('#total_'+id).html(cur+ptotal);
             }
-            $('#total').html(cur+total);
-            $('#totalinput').val(total);
-            var Discount = parseInt($('#cdis').val());
+            jQuery('#total').html(cur+total);
+            jQuery('#totalinput').val(total);
+            var Discount = parseInt(jQuery('#cdis').val());
             if(Discount > 0)
                 {
-                    var total=parseFloat($('#totalinput').val());
-                    $('#tdis').html('<?php echo JText::_('COM_CATALOG_TOTAL_DISCOUNT'); ?>('+Discount+'%):');
+                    var total=parseFloat(jQuery('#totalinput').val());
+                    jQuery('#tdis').html('<?php echo JText::_('COM_CATALOG_TOTAL_DISCOUNT'); ?>('+Discount+'%):');
                     var tdis=(total-(total*(Discount/100)));
                     var h =cur+tdis;
-                    $('#totaldis').html(h);
+                    jQuery('#totaldis').html(h);
                 }
             return false;
       }
     });
     <?php 
     if(isset($_GET['redirect']))
-        echo "$(\"#cart\").submit();";
+        echo "jQuery(\"#cart\").submit();";
     ?>
   });
   
@@ -104,14 +104,13 @@ if(isset($_GET['cid']))
 <div class="product-list">
 <h3><i class="fa fa-heart fa-rotate-270"></i><span><?php echo JText::_('COM_CATALOG_CART_DETAIL'); ?></span><i class="fa fa-heart fa-rotate-90"></i>
 </h3>
-<div class="label_cart">
-    <div class="span5"></div>
+<div class="label_cart span12">
+    <div class="span5"><?php echo JText::_('COM_CATALOG_PRODUCT'); ?></div>
     <div class="span2"><?php echo JText::_('COM_CATALOG_PRICE'); ?></div>
     <div class="span2"><?php echo JText::_('COM_CATALOG_QUANTITY'); ?></div>
-    <div class="span3">Total</div>
+    <div class="span3"><?php echo JText::_('COM_CATALOG_TOTAL'); ?></div>
 </div>
-<div class="content_cart">
-    <form method="POST" id="cart" action="<?php echo JRoute::_('index.php?option=com_catalog&view=sales&layout=payment');?>">
+    <form class="span12" method="POST" id="cart" action="<?php echo JRoute::_('index.php?option=com_catalog&view=sales&layout=payment');?>">
     <?php
     $total=0;
     foreach($productsid as $pid => $cant):
@@ -123,7 +122,6 @@ if(isset($_GET['cid']))
             $price=$p->SalePrice;
             $ptotal+= $p->SalePrice*$cant;
             ?>
-            <div class="content_cart">
              <div class="span5">
 	
 				 <?php 
@@ -134,24 +132,24 @@ if(isset($_GET['cid']))
 			        else
 			            $image='./components/com_catalog/images/no-image-product.jpg';
 			        ?>
-				 <img src="<?php echo $image; ?>" />
+				 <img class="cart-image" src="<?php echo $image; ?>" />
                  <h4><?php echo $lval->Name; ?></h4>
                  <input type="hidden" name="p[]" value="<?php echo $p->Id ?>" />
                  <input type="hidden" id="price_<?php echo $p->Id ?>" name="price[]" value="<?php echo $p->SalePrice; ?>" />
              </div>
              <div class="span2 price"><?php echo AuxTools::MoneyFormat($price); ?></div>
              <div class="span2">
-               <input id="p_<?php echo $p->Id ?>" class="spinner" name="pc[]" value="<?php echo $cant; ?>">
+               <input id="p_<?php echo $p->Id ?>" class="spinner span2" name="pc[]" value="<?php echo $cant; ?>">
             
-            <button type="button" onclick="return addproducts(null);" >
-                <i class="fa fa-refresh fa-2x"></i>
-            </button>
-            <button type="button" onclick="return addproducts('<?php echo $p->Id ?>');" >
-                <i class="fa fa-trash-o fa-2x"></i>
-            </button>
+                <button type="button" onclick="return addproducts(null);" >
+                    <i class="fa fa-refresh fa-2x"></i>
+                </button>
+                <button type="button" onclick="return addproducts('<?php echo $p->Id ?>');" >
+                    <i class="fa fa-trash-o fa-2x"></i>
+                </button>
              </div>
              <div id="total_<?php echo $p->Id ?>" class="span2 price"><?php echo AuxTools::MoneyFormat($ptotal); ?></div>
-            </div>
+            
             <?php
             $total+=$ptotal;
         }
@@ -182,14 +180,13 @@ if(isset($_GET['cid']))
                 <input type="hidden" id="cdis" name="cdis" value="" />
                 
                 <button type="submit" class="buy_it">
-                    Procesar compra<i class="fa fa-shopping-cart fa-3x"></i>
+                    <i class="fa fa-shopping-cart fa-3x"></i>
                 </button>
             </div>
             
         </div>
         
     </form>
-</div>    
 <script type="text/javascript">
 function addproducts(pid)
 {
@@ -212,7 +209,7 @@ function addproducts(pid)
                 }
     }
     
-    $.ajax({ 
+    jQuery.ajax({ 
         url:"index.php?option=com_catalog&task=setproducts", 
         data:{pid:products, cant:q}
         }).done(function( data ) {
@@ -241,7 +238,7 @@ function checkcoupon()
                     alert('<?php echo JText::_('COM_CATALOG_COUPON_AVAILABLE')?>');
                     jQuery('#cid').val(c.Id);
                     jQuery('#cdis').val(c.Discount);
-                    var total=parseFloat($('#totalinput').val());
+                    var total=parseFloat(jQuery('#totalinput').val());
                     var cur="<?php echo DEFAULT_CURRENCY ?>";
                     jQuery('#tdis').html('<?php echo JText::_('COM_CATALOG_TOTAL_DISCOUNT'); ?>('+c.Discount+'%):');
                     var tdis=(total-(total*(c.Discount/100)));

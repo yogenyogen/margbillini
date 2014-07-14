@@ -16,9 +16,9 @@ else
 
 ?>
 <script type="text/javascript">
-$(function() 
+jQuery(function() 
 {
-    $( "#dialog" ).dialog({
+    jQuery( "#dialog" ).dialog({
       autoOpen: false,
       modal:true,
       width: 'auto',
@@ -36,10 +36,10 @@ $(function()
 function addproduct(pid)
 {
     
-    var cant=$("#quantity").val();
-    $.ajax({
+    var cant=jQuery("#quantity").val();
+    jQuery.ajax({
         url:"../index.php?option=com_catalog&task=setproduct&format=json", 
-        data:{ pid: pid, cant: $("#quantity").val() },
+        data:{ pid: pid, cant: jQuery("#quantity").val() },
         dataType:'json'
         }
     ).done(function( data, textStatus, jqXHR) {
@@ -47,12 +47,12 @@ function addproduct(pid)
             var price = "<?php echo $product->SalePrice; ?>";
             var curr = "<?php echo DEFAULT_CURRENCY; ?>";
             var str=cant+" x "+curr+(cant*price);
-            $("#cantelem").html("");
-            $("#cantelem").html(str);
+            jQuery("#cantelem").html("");
+            jQuery("#cantelem").html(str);
             var html= c[0] +" <?php echo JText::_('COM_CATALOG_CART_ARTICLES_FOR')." " ?>"+c[1];
-            $( "#dialog" ).dialog( "open" );
-            $( "#cart_detail_str" ).html(html);
-            $('#dialog-product-detail').html($('#list-product-detail-'+pid).html()); 
+            jQuery( "#dialog" ).dialog( "open" );
+            jQuery( "#cart_detail_str" ).html(html);
+            jQuery('#dialog-product-detail').html(jQuery('#list-product-detail-'+pid).html()); 
             return true;
       }
     ).fail(function( jqXHR, textStatus, errorThrown ) {
