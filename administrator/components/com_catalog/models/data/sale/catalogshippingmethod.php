@@ -16,6 +16,7 @@ class catalogshippingmethod extends dbobject {
     public $MinDays=0;
     public $MaxDays=0;
     public $Price=0;
+    public $Global=0;
         
     public function __construct($id) {
         parent::__construct($id, get_class());

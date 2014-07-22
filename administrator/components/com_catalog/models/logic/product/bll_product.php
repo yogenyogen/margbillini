@@ -93,6 +93,58 @@ class bll_product extends catalogproduct {
         return parent::findAll($field, $value, $DESC, $order_field, $lower_limit, $upper_limit);
 
     }
+    
+    /**
+     * Find products by category
+     * @param integer $cid
+     * 
+     * @return bll_product array of products
+     */
+    public static function find_products($cid = null, $lower_limit=null, $upper_limit=null)
+    {
+        $db = new dbprovider(true);
+        $salep = new catalogproductsale(-1); 
+        $valid_delim=false;
+        $query = "select Id from #__catalogproduct where ";
+        if($cid != null)
+        {
+            $query.= "CategoryId = ".$db->escape_string($cid)." AND ";
+        }
+        $query2 = $query;
+        $query.="Id Not IN "
+                . "(select ProductId from `#__".$salep->getTableName()."` where `SaleId` IN "
+                . "(select Id from `#__catalogsale` where `SaleStateId`=1))";
+        $query2.="Id IN "
+                . "(select ProductId from `#__".$salep->getTableName()."` where `SaleId` IN "
+                . "(select Id from `#__catalogsale` where `SaleStateId`=1))"; 
+        if ($lower_limit !== null && $upper_limit !== null):
+            if ((is_int($lower_limit) && is_int($upper_limit)) || ( is_numeric($lower_limit) && is_numeric($upper_limit)))
+            {
+                $valid_delim=true;
+            }
+        endif;
+        $db->Query($query);
+        $products = array();
+        $products =$db->getNextObjectList();
+        $db->Query($query2);
+        $products=array_merge($products, $db->getNextObjectList());
+        if($valid_delim != true)
+        {
+            $lower_limit = 0;
+            $upper_limit = count($products);
+        }
+        $final_arr = array();
+        $index =0;
+        foreach($products as $pobj)
+        {
+            if($index >= $lower_limit && $index < $upper_limit)
+            {
+                $final_arr[]= new bll_product($pobj->Id);
+            }
+            $index++;
+        }
+        return $final_arr;
+    }
 
     
 
@@ -1097,11 +1149,23 @@ class bll_product extends catalogproduct {
 
     }
 
+    /**
+     * Check product availability
+     * 
+     * @param integer $pid product id
+     * @return catalogproductsale array of sales
+     */
+    static function check_product_sales($pid)
+    {
+        $db = new dbprovider(true);
+        $salep = new catalogproductsale(-1); 
+        
+        $query = "select * from `#__".$salep->getTableName()."` where `ProductId`=".$db->escape_string($pid)." AND `SaleId` IN "
+                . "(select Id from `#__catalogsale` where `SaleStateId`=1)";
+        $db->Query($query);
+        $psales = $db->getNextObjectList();
+        return $psales;
+    }
     
-
 }
-
-
-
-?>
 

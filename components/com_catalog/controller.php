@@ -22,10 +22,13 @@ class CatalogController extends JControllerLegacy
 {
     function setproduct()
     {
-        
         $jinput = JFactory::getApplication()->input;
         $qpid=$jinput->get('pid', null);
         $qcant=$jinput->get('cant', null);
+        if(count(bll_product::check_product_sales($qpid)) > 0)
+        {
+            $qpid = 0;
+        }
         if($qpid > 0)
         {
             $sess=JFactory::getApplication()->getSession();
@@ -35,10 +38,12 @@ class CatalogController extends JControllerLegacy
             {
                 if($qpid == $id)
                 {
-                    if($qcant>0)
-                        $cant+=$qcant;
-                    else
-                        $cant++;
+//                    if($qcant>0)
+//                        $cant+=$qcant;
+//                    else
+//                        $cant++;
+                    
+                    $cant=1;
                     
                     $found=true;
                     break;
@@ -79,7 +84,10 @@ class CatalogController extends JControllerLegacy
             for($i =0; $i<count($qpid); $i++)
             {
                 if($qcant[$i] > 0)
-                    $productsid[$qpid[$i]]=$qcant[$i];
+                {
+                    //$productsid[$qpid[$i]]=$qcant[$i];
+                    $productsid[$qpid[$i]]=1;
+                }
             }
             $sess->set('products', $productsid);
             echo 1;
@@ -290,10 +298,21 @@ class CatalogController extends JControllerLegacy
             $temp=$input->getArray();
             unset($temp['task']);
             $vars = http_build_query($temp);
-            $this->setRedirect($intertal_sale_fail_redirect."?".$vars);
+            $this->setRedirect($intertal_sale_fail_redirect."&".$vars);
             JFactory::getApplication()->enqueueMessage($msg,'error');
         }
         $this->redirect();
+    }
+    
+    public function setcurr()
+    {
+       $jinput = JFactory::getApplication()->input;
+       $curr_id=$jinput->get('curr', DEFAULT_CURRENCY);
+       $curr = new bll_currencies($curr_id);
+       $curr_code = $curr->CurrCode;
+       bll_currencies::setActiveCurrency($curr_code);
+       $this->setRedirect('/index.php/');
+       $this->redirect();
     }
     
     function RegisterUser()
@@ -541,6 +560,7 @@ class CatalogController extends JControllerLegacy
     function get_cart_summary()
     {
         $sess=JFactory::getApplication()->getSession();
+        $curr = bll_currencies::getActiveCurrency();
         $productsid = $sess->get('products', array());
         $ptotal=0;
         $total=0;
@@ -553,7 +573,7 @@ class CatalogController extends JControllerLegacy
         ob_start();
         // Get the application object.  
         header('Content-type: application/json');
-        echo json_encode(array($ptotal, AuxTools::MoneyFormat($total), $productsid));
+        echo json_encode(array($ptotal, AuxTools::MoneyFormat($total, $curr->CurrCode, $curr->Rate), $productsid, $curr));
         exit();
     }
 }

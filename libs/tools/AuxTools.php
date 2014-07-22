@@ -742,7 +742,7 @@ class AuxTools
      */
     static function MoneyFormat($total, $curr=DEFAULT_CURRENCY, $conver_rate=DEFAULT_CONVERTION_RATE, $style=1)
     {
-        $total_1 = $total/$conver_rate;
+        $total_1 = $total*$conver_rate;
         $total = round($total_1, 2);
         switch($style)
         {

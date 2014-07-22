@@ -65,6 +65,9 @@ if(isset($input['postal_code']))
 if(isset($input['dob']))
     $profile['dob']=$input['dob'];
 
+
+$curr = bll_currencies::getActiveCurrency();
+
 $cangoon=false;
 for($i=0; $i< count($productsid); $i++):
     $temp_pro = new bll_product($productsid[$i]);
@@ -85,6 +88,7 @@ $city = new cities(0);
 $s = new bll_shippingmethod(0);
 $cities=$city->findAll(null,null,false,'Name');
 $smethods = $s->findAll(null,null,false);
+$global_shipping_methods = $s->findAll('Global', 1);
 $arr=array();
 foreach($cities as $c)
 {
@@ -104,7 +108,7 @@ $locations= country::getLocationTree();
 
 ?>
 <?php if($user->guest): ?>
-    <div id="dialog-login" title="Identificate">
+    <div id="dialog-login" title="<?php echo JText::_('COM_CATALOG_LOGIN'); ?>">
 
     </div>
 <?php endif; ?>
@@ -114,7 +118,7 @@ $locations= country::getLocationTree();
         {
         ?>
         jQuery.ajax(
-            {url:'./index.php?option=com_users&view=login&login_redirect_uri=<?php echo urlencode('/index.php?option=com_catalog&view=sales&redirect=1&cid='.$cid);?>&tmpl=component'}
+            {url:'/index.php?option=com_users&view=login&login_redirect_uri=<?php echo urlencode('/index.php?option=com_catalog&view=sales&redirect=1&cid='.$cid);?>&tmpl=component'}
           ).done(function(data){
               var str=data;
               var arr=str.split("</head>");
@@ -151,9 +155,9 @@ $locations= country::getLocationTree();
 	<div class="left_module_login">
             <?php if($user->guest): ?>
             
-            <h3>¿Ya tienes cuenta? Identifícate!</h3>
+            <h3><?php echo JText::_('COM_CATALOG_HAVE_ACCOUNT_LOGIN'); ?></h3>
             <p>
-                Ve a nuestra sección de identifícate clicando en el siguiente botón: <button id="opener-login" type="button">identificate</button>
+                <?php echo JText::_('COM_CATALOG_LOGIN_CLICK_HERE'); ?>: <button id="opener-login" type="button"><?php echo JText::_('COM_CATALOG_LOGIN'); ?></button>
             </p>
             <?php endif; ?>
 	</div>        
@@ -161,7 +165,7 @@ $locations= country::getLocationTree();
   var cities_method = <?php echo json_encode($arr, JSON_UNESCAPED_UNICODE); ?>;
   var smethods=<?php echo json_encode($smethods, JSON_UNESCAPED_UNICODE); ?>;
   var location_tree= <?php echo json_encode($locations, JSON_UNESCAPED_UNICODE); ?>;
-  
+  var globas_smethods  = <?php echo json_encode($global_shipping_methods, JSON_UNESCAPED_UNICODE); ?>;
   jQuery(function() {
 
     jQuery( "#accordion" ).accordion({ disabled: true });
@@ -219,7 +223,7 @@ $locations= country::getLocationTree();
                 if(!field.validity.valid)
                     {
                        isvalid=false;
-                       jQuery('#accordion').accordion({active:active_tab});
+                       jQuery('#accordion').accordion({active:active_tab-1});
                        field.focus();
                        return false;
                     }
@@ -235,12 +239,6 @@ $locations= country::getLocationTree();
           }
           if(active_tab === 1)
               {
-          if(jQuery('#sector').val() === "")
-              {
-                  jQuery('#accordion').accordion({active:1});
-                  jQuery('#sector').focus();
-                  return false;
-              }
           if(jQuery('#city').val() === "")
               {
                   jQuery('#accordion').accordion({active:1});
@@ -297,21 +295,6 @@ $locations= country::getLocationTree();
                   break;
               }
           }
-     for(var i=0; i < cities.length; i++)
-          {
-              var c = cities[i];
-              if(c.id === val)
-              {
-                  sectors = c.sectors;
-                  break;
-              }
-          }
-      var sechtml="<option></option>";
-      for(var i=0; i < sectors.length; i++)
-        {
-            sechtml+="<option value=\""+sectors[i].id+"\">"+sectors[i].name+"</option>";
-        }
-      jQuery('#sector').html(sechtml);
       for(var k in cities_method)
       {
           if(val === k)
@@ -322,8 +305,14 @@ $locations= country::getLocationTree();
                         var av = false;
                         var elem=smethods[sm];
                         var context=jQuery('#sm_'+elem.Id);
-                        for(var n in arr)
-
+                        
+                        if(elem.Global === '1')
+                        {
+                           av = true;   
+                        }    
+                        else
+                        {
+                            for(var n in arr)
                             {
                                 if(arr[n] === elem.Id)
                                     {
@@ -331,6 +320,7 @@ $locations= country::getLocationTree();
                                         break;
                                     }
                             }
+                        }
                         if(av ===true)
                             context[0].disabled=false;
                         else
@@ -349,8 +339,15 @@ $locations= country::getLocationTree();
                 var input =context[0]; 
                 if(input !== undefined)
                 {
-                    input.disabled=true;
-                    input.checked=false;
+                    if(elem.Global !== '1')
+                    {
+                        input.disabled=true;
+                        input.checked=false;
+                    }
+                    else
+                    {
+                        input.disabled=false;
+                    }
                 }
             }
   }
@@ -359,7 +356,7 @@ $locations= country::getLocationTree();
   {
 
       var radios = document.getElementsByName('smid');
-      var cur = '<?php echo DEFAULT_CURRENCY ?>';
+      var cur = '<?php echo $curr->CurrCode ?>';
       var sprice=0;
       for(var i=0;  i<radios.length; i++)
           {
@@ -463,7 +460,7 @@ $locations= country::getLocationTree();
   }
 </script>
 	<div class="right_module_login">
-	<h3>¿Nuevo usuario? Regístrate!</h3>
+	<h3><?php echo JText::_('COM_CATALOG_NEW_USER_REGISTER'); ?></h3>
 	<ul class="registro_field">
 	<li>
             <label><?php echo JText::_('COM_CATALOG_USERNAME'); ?> *</label>
@@ -613,6 +610,14 @@ $locations= country::getLocationTree();
                      });
                 </script>';
             }
+            else
+            {
+                echo '<script>
+                    jQuery(function() {
+                        changeMethods("0");
+                     });
+                </script>';
+            }
         ?>
 		</li>
 		<li>
@@ -648,7 +653,7 @@ $locations= country::getLocationTree();
 
                 echo '<input disabled="disabled" required="required" onchange="shipping()" id="sm_'.$shipping->Id.'" type="radio" name="smid" value="'.$shipping->Id.'" />
 
-                    <label>'.$shipping->getLanguageValue($LangId)->Name.''.AuxTools::MoneyFormat($shipping->Price).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
+                    <label>'.$shipping->getLanguageValue($LangId)->Name.''.AuxTools::MoneyFormat($shipping->Price,$curr->CurrCode, $curr->Rate).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
 
             }
 
@@ -732,9 +737,9 @@ $locations= country::getLocationTree();
 
 			                $preduce = $product->SalePrice*($coupon->Discount/100);
 
-			            $ptotal = AuxTools::MoneyFormat(($product->SalePrice-$preduce)*$productscant[$i]);
+			            $ptotal = AuxTools::MoneyFormat(($product->SalePrice-$preduce)*$productscant[$i], $curr->CurrCode, $curr->Rate);
 
-						$punit = AuxTools::MoneyFormat($product->SalePrice-$preduce);
+						$punit = AuxTools::MoneyFormat($product->SalePrice-$preduce, $curr->CurrCode, $curr->Rate);
 
 			            ?>
 
@@ -780,7 +785,7 @@ $locations= country::getLocationTree();
 
 				<td class="grey"><p><?php echo JText::_('COM_CATALOG_SUB_TOTAL'); ?>:</p></td>
 
-				<td class="grey price"><span id="sub-total"><?php echo AuxTools::MoneyFormat($total-$reduce); ?></span></td>
+				<td class="grey price"><span id="sub-total"><?php echo AuxTools::MoneyFormat($total-$reduce, $curr->CurrCode, $curr->Rate); ?></span></td>
 
 			</tr>
 
@@ -794,7 +799,7 @@ $locations= country::getLocationTree();
 
 				<td class="white"><p><?php echo JText::_('COM_CATALOG_SHIPPING'); ?>:</p></td>
 
-				<td class="white price"><span id="shi-total"><?php echo AuxTools::MoneyFormat(0); ?></span></td>
+				<td class="white price"><span id="shi-total"><?php echo AuxTools::MoneyFormat(0, $curr->CurrCode, $curr->Rate); ?></span></td>
 
 			</tr>
 
@@ -808,7 +813,7 @@ $locations= country::getLocationTree();
 
 				<td class="grey"><p><?php echo JText::_('COM_CATALOG_TOTAL'); ?>:</p></td>
 
-				<td class="grey price"><span id="total"><?php echo AuxTools::MoneyFormat($total-$reduce); ?></span></td>
+				<td class="grey price"><span id="total"><?php echo AuxTools::MoneyFormat($total-$reduce, $curr->CurrCode, $curr->Rate); ?></span></td>
 
 			</tr>
 
@@ -862,7 +867,7 @@ $locations= country::getLocationTree();
 
 					 <input type="hidden" name="internal_sale_fail_redirect" 
 
-		                       value="<?php echo $_SERVER['REDIRECT_URL']; ?>" />
+		                       value="/index.php?option=com_catalog&view=sales&layout=payment" />
 
 		                <input type="hidden" name="sale_success_redirect" 
 
@@ -870,7 +875,7 @@ $locations= country::getLocationTree();
 
 		                <input type="hidden" name="user_creation_fail_redirect" 
 
-		                       value="<?php echo $_SERVER['REDIRECT_URL']; ?>" />
+		                       value="/index.php?option=com_catalog&view=sales&layout=payment" />
 
 		            <button class="back" type="button" onclick="$('#accordion').accordion({active:$( '#accordion' ).accordion( 'option', 'active' )-1});">
 

@@ -54,17 +54,9 @@ $user = JFactory::getUser();
 $jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT);
 
 // Adjusting content width
-if ($this->countModules('position-7') && $this->countModules('position-8'))
+if ($this->countModules('position-7'))
 {
-	$span = "span6";
-}
-elseif ($this->countModules('position-7') && !$this->countModules('position-8'))
-{
-	$span = "span9";
-}
-elseif (!$this->countModules('position-7') && $this->countModules('position-8'))
-{
-	$span = "span9";
+	$span = "span7";
 }
 else
 {
@@ -74,7 +66,7 @@ else
 // Logo file or site title param
 if ($this->params->get('logoFile'))
 {
-	$logo = '<img src="'. JUri::root() . $this->params->get('logoFile') .'" alt="'. $sitename .'" />';
+	$logo = '<img class="pull-center" src="'. JUri::root() . $this->params->get('logoFile') .'" alt="'. $sitename .'" />';
 }
 elseif ($this->params->get('sitetitle'))
 {
@@ -153,47 +145,61 @@ else
 
 	<!-- Body -->
 	<div class="body">
-                <header class="header header-block" role="banner">
-				<div class="header-inner clearfix">
-					<a class="brand pull-left" href="<?php echo $this->baseurl; ?>">
-						<?php echo $logo;?> <?php if ($this->params->get('sitedescription')) { echo '<div class="site-description">'. htmlspecialchars($this->params->get('sitedescription')) .'</div>'; } ?>
-					</a>
-					<div class="header-search pull-right">
-						<jdoc:include type="modules" name="position-0" style="none" />
-					</div>
-				</div>
-                </header>
 		<div class="container<?php echo ($params->get('fluidContainer') ? '-fluid' : '');?>">
 			<!-- Header -->
-			
-			<?php if ($this->countModules('position-1')) : ?>
-			<nav class="navigation" role="navigation">
-				<jdoc:include type="modules" name="position-1" style="none" />
-			</nav>
-			<?php endif; ?>
-			<jdoc:include type="modules" name="banner" style="xhtml" />
+                        <header class="header row-fluid">
+                                <div class="pull-right span12">
+                                    <jdoc:include type="modules" name="position-0" style="none" />
+                                </div>
+                                <div class="clearfix span12">
+                                    <a class="brand" href="<?php echo $this->baseurl; ?>">
+                                            <?php echo $logo;?>
+                                    </a> 
+                                    <div class="title center">
+                                        <h2>
+                                        <?php echo $sitename ?>
+                                        </h2>
+                                    </div>
+                                    <?php if ($this->params->get('sitedescription')) { echo '<div class="site-description center">'. htmlspecialchars($this->params->get('sitedescription')) .'</div>'; } ?> 
+                                </div>
+                        </header>
+                        <div class="row-fluid">
+                            
+                            <?php if ($this->countModules('position-1')) : ?>
+                            <nav class="navigation span10" role="navigation">
+                                <jdoc:include type="modules" name="position-1" style="none" />
+                            </nav>
+                            <div class="span2 cart-module">
+                                    <jdoc:include type="modules" name="position-8" style="xhtml" />
+                            </div>
+                            <?php endif; ?>
+                        </div>    
+                        
+                        <div>
+                            <jdoc:include type="message" />
+                            <jdoc:include type="modules" name="position-2" style="none" />
+                            <jdoc:include type="modules" name="banner" style="xhtml" />
+                        </div>
 			<div class="row-fluid">
 				<?php if ($this->countModules('position-8')) : ?>
 				<!-- Begin Sidebar -->
-				<div id="sidebar" class="span3">
+<!--				<div id="sidebar" class="span3">
 					<div class="sidebar-nav">
-						<jdoc:include type="modules" name="position-8" style="xhtml" />
+						
 					</div>
-				</div>
+				</div>-->
 				<!-- End Sidebar -->
 				<?php endif; ?>
 				<main id="content" role="main" class="<?php echo $span;?>">
 					<!-- Begin Content -->
 					<jdoc:include type="modules" name="position-3" style="xhtml" />
-					<jdoc:include type="message" />
 					<jdoc:include type="component" />
-					<jdoc:include type="modules" name="position-2" style="none" />
 					<!-- End Content -->
 				</main>
 				<?php if ($this->countModules('position-7')) : ?>
-				<div id="aside" class="span3">
+				<div id="aside" class="span5">
 					<!-- Begin Right Sidebar -->
-					<jdoc:include type="modules" name="position-7" style="well" />
+					<jdoc:include type="modules" name="position-7" style="xhtml" />
 					<!-- End Right Sidebar -->
 				</div>
 				<?php endif; ?>
@@ -204,7 +210,7 @@ else
 	<footer class="footer" role="contentinfo">
 		<div class="container<?php echo ($params->get('fluidContainer') ? '-fluid' : '');?>">
 			<hr />
-			<jdoc:include type="modules" name="footer" style="none" />
+			<jdoc:include type="modules" name="footer" style="menu" />
 			<p class="pull-right">
 				<a href="#top" id="back-top">
 					<?php echo JText::_('TPL_MARG_BACKTOTOP'); ?>

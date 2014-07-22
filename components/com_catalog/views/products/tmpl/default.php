@@ -27,24 +27,28 @@ $limitstart=0;
 if(isset($_POST['limitstart']))
     $limitstart=$_POST['limitstart'];
 
-$elements_by_page=6;
-$total = count($product->findAll('CategoryId', $cat->Id, true, 'Id'));
+$elements_by_page=12;
+$total = count(bll_product::find_products($cat->Id));
 $page_displayed=1;
 if(($limitstart)!= 0)
 {
     $page_displayed=($elements_by_page+$limitstart)/$elements_by_page;   
 }
+$document = JFactory::getDocument();
+$document->setTitle($cat->getLanguageValue($LangId)->Name);
+$document->setDescription(strip_tags($cat->getLanguageValue($LangId)->Description));
+$products = bll_product::find_products($cat->Id,$limitstart, $elements_by_page);
 
-$products = $product->findAll('CategoryId', $cat->Id, true, 'Id', $limitstart, $elements_by_page);
+$curr = bll_currencies::getActiveCurrency();
 ?>
 <h1><?php echo JText::_('COM_CATALOG_CATALOG'); ?></h1>
-<div class="products-holder" span="span12">
+<div class="products-holder" class="row-fluid">
     <h4>
         <?php echo $catlv->Name; ?>
     </h4>
-    <div class="product-list">
+    <div class="span12">
             <?php foreach($products as $product): ?>
-            <div class="product" class="span3">
+            <div class="span3">
                 <?php 
                 $img = $product->getMainImage();
                 $lval = $product->getLanguageValue($LangId);
@@ -55,7 +59,14 @@ $products = $product->findAll('CategoryId', $cat->Id, true, 'Id', $limitstart, $
 
                 ?>
                 <a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><img class="lis-image" src="<?php echo $image; ?>" /></a>
-                <h3><a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
+                <div>
+                    <h3><a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
+                </div>
+                <div>
+                    <?php 
+                    echo AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
+                    ?>
+                </div>
             </div>
             <?php endforeach; ?>
     </div>

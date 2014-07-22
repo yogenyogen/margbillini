@@ -11,7 +11,7 @@ $uid=JFactory::getUser()->id;
 $nelementsbypage =NUMBER_ELEMENTS_BY_PAGE;
 $total = count($ob->findAll('UserId', $uid,true, $ob->getPrimaryKeyField()));
 $lower_limit=0;
-
+$curr = bll_currencies::getActiveCurrency();
 if(isset($_REQUEST['limitstart']))
     $lower_limit=$_REQUEST['limitstart'];
 
@@ -102,7 +102,7 @@ foreach($objs as $obj)
                     ?>
                     <p><?php echo JText::_('COM_CATALOG_PLANS'); ?></p>
                     <div class="span12">
-                        <?php echo $product->getLanguageValue($LangId)->Name; ?> x <?php echo $productscant[$i]; ?>(<?php echo AuxTools::MoneyFormat($ptotal); ?>)
+                        <?php echo $product->getLanguageValue($LangId)->Name; ?> x <?php echo $productscant[$i]; ?>(<?php echo AuxTools::MoneyFormat($ptotal, $curr->CurrCode, $curr->Rate); ?>)
                     </div>
                     <?php
 
@@ -114,13 +114,13 @@ foreach($objs as $obj)
                         <?php  echo $payment->getLanguageValue($LangId)->Name; ?>
                     </p>
                     <p><?php echo JText::_('COM_CATALOG_SUB_TOTAL'); ?>:
-                        <span id="sub-total"><?php echo AuxTools::MoneyFormat($sale_total); ?></span>
+                        <span id="sub-total"><?php echo AuxTools::MoneyFormat($sale_total, $curr->CurrCode, $obj->CurrencyRate); ?></span>
                     </p>
                     <p><?php echo JText::_('COM_CATALOG_SHIPPING'); ?>:
-                        <span id="shi-total"><?php echo AuxTools::MoneyFormat($shipping->Price); ?></span>
+                        <span id="shi-total"><?php echo AuxTools::MoneyFormat($shipping->Price, $curr->CurrCode, $obj->CurrencyRate); ?></span>
                     </p>
                     <p><?php echo JText::_('COM_CATALOG_TOTAL'); ?>:
-                        <span id="total"><?php echo AuxTools::MoneyFormat($sale_total+$shipping->Price); ?></span>
+                        <span id="total"><?php echo AuxTools::MoneyFormat($sale_total+$shipping->Price, $curr->CurrCode, $obj->CurrencyRate); ?></span>
                     </p>
              </div>
             

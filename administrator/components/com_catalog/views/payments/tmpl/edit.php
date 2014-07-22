@@ -17,12 +17,9 @@ $jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT);
 
 ?>
 
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY19; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
-<link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>
-
-
+<script type="text/javascript" src="../<?php echo LIBS . JS . JQUERY; ?>"></script>
+<script type="text/javascript" src="../<?php echo LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
+<link rel="stylesheet" href="../<?php echo  LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
 
 <div id="j-main-container" class="span10">   
     <div class="btn-toolbar" id="toolbar">
@@ -65,7 +62,7 @@ $jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT);
         $form->Label(JText::_('COM_CATALOG_NAME')."($lang->title_native)", 'Name_'.$lang->lang_id);
         $form->Text('Name_'.$lang->lang_id, $langval->Name, '', 'Labels', true);
         $form->Label(JText::_('COM_CATALOG_DESCRIPTION')."($lang->title_native)", 'Description_'.$lang->lang_id);
-        $form->Editor('Description_'.$lang->lang_id, $langval->Description, 'default_tiny_id_'.$lang->lang_id, 'default_tiny_class_'.$lang->lang_id);
+        $form->JEditor('Description_'.$lang->lang_id, $langval->Description, 300,400,30,30);
     endforeach;
 
 

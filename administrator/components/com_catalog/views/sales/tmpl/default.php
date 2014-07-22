@@ -110,7 +110,7 @@ foreach($objs as $obj)
     $payment = new bll_paymentmethod($obj->PaymentMethodId);
     $shipping = new bll_shippingmethod($obj->ShippingMethodId);
     $salestate = new bll_salestate($obj->SaleStateId);
-    
+    $curr = new bll_currencies($obj->CurrencyId);
     $user = JFactory::getUser($obj->UserId);
     $profile=JUserHelper::getProfile($user->id)->getProperties();
     $profile=$profile['profile'];
@@ -168,8 +168,7 @@ foreach($objs as $obj)
                 $desc="<p>".JText::_('COM_CATALOG_SHIPPING')."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_COUNTRY').": ".$profile['country']."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_REGION').": ".$profile['region']."</p>";
-                $desc.="<p>".JText::_('COM_CATALOG_DISTRICT').": ".$profile['city']."</p>";
-                $desc.="<p>".JText::_('COM_CATALOG_SECTOR').": ".$profile['sector']."</p>";
+                $desc.="<p>".JText::_('COM_CATALOG_CITY').": ".$profile['city']."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_ADDRESS').": ".$profile['address1']." ".$profile['address2']."</p>";
                 $sub_total=0;
                 $html="<div style=\"background-color:#EDEDED; padding:20px; font-family:Arial !important;\">
@@ -178,31 +177,31 @@ foreach($objs as $obj)
                 $html.="
                 <table width=\"100%\" border=\"0\" cellpadding=\"0\"  cellspacing=\"0\" >
                 <tr>
-                        <td align=\"left\"><img src=\"https://www.freeroamingpanama.com/images/logo_bill.jpg\" /></td>
+                        <td align=\"left\"><img src=\"http://www.margbillini.com/images/logo_bill.png\" /></td>
                         <td align=\"right\">
                                 <h3 style=\"font-family:Arial !important; font-size:14px; text-transform:uppercase; margin:0;\">".JText::_('COM_CATALOG_SALE_CONFIRMATION')."</h3>
-                                <h3 style=\"font-family:Arial !important; font-size:17px; margin:0;\">Orden # $obj->Id</h3>
+                                <h3 style=\"font-family:Arial !important; font-size:17px; margin:0;\">".JText::_('COM_CATALOG_ORDER')." # $obj->Id</h3>
                                 <p>".JText::_('COM_CATALOG_NAME').": $user->name - ".JText::_('COM_CATALOG_ID').":$user->id</p>
                         </td>
                 </tr>
                 <tr>
                         <td colspan=\"2\">
-                                <img src=\"https://www.freeroamingpanama.com/images/pointer.jpg\" />
-                                <p style=\"margin:15px 0 15px 0; font-family:Arial !important;\">Gracias por utilizar nuestros servicios.<br/>
-                                Hemos recibido su orden, en pocos momentos, procederemos a procesarlo.</p>
+                                <img src=\"http://www.margbillini.com/images/pointer.jpg\" />
+                                <p style=\"margin:15px 0 15px 0; font-family:Arial !important;\">".JText::_('COM_CATALOG_PURCHASE_THANK_YOU_MESSAGE')."</p>
 
-                                <p style=\"margin-bottom:15px; font-family:Arial !important;\">A continuación el detalle de la orden:</p>
+                                <p style=\"margin-bottom:15px; font-family:Arial !important;\">".JText::_('COM_CATALOG_ORDER_DETAIL').":</p>
                                 <p style=\"margin-bottom:5px; font-family:Arial !important;\"><strong>".JText::_('COM_CATALOG_DATE').":</strong>". $obj->Date."</p>
                         <p style=\"margin-bottom:5px; font-family:Arial !important;\"><strong>".JText::_('COM_CATALOG_PAYMENT_METHOD').":</strong>". $payment->getLanguageValue($LangId)->Name."</p>
                         <p style=\"margin-bottom:20px; font-family:Arial !important;\"><strong>".JText::_('COM_CATALOG_SHIPPING_METHOD').":</strong>". $shipping->getLanguageValue($LangId)->Name."</p>
+                        <p style=\"margin-bottom:20px; font-family:Arial !important;\"><strong>".JText::_('COM_CATALOG_SALE_STATE').":</strong>". $salestate->getLanguageValue($LangId)->Name."</p>
 
 
                                 <table width=\"100%\" border=\"1\" cellpadding=\"5\" style=\"background:#fff; border:1px solid #ccc;\">
                                         <tr style=\"background:#efefef; text-align:left; font-size:12px;\" >
-                                                <th>Cantidad</th>
-                                                <th>Descripción</th>
-                                                <th>Precio</th>
-                                                <th>Precio Total</th>
+                                                <th>".JText::_('COM_CATALOG_QUANTITY')."</th>
+                                                <th>".JText::_('COM_CATALOG_DESCRIPTION')."</th>
+                                                <th>".JText::_('COM_CATALOG_PRICE')."</th>
+                                                <th>".JText::_('COM_CATALOG_TOTAL')."</th>
                                         </tr>";
                                         for($i=0; $i< count($productsid); $i++):
                                             $product = new bll_product($productsid[$i]);
@@ -211,8 +210,8 @@ foreach($objs as $obj)
                                                 $preduce = $product->SalePrice*($coupon->Discount/100);
                                             $temp_total = ($product->SalePrice-$preduce)*$productscant[$i];
                                             $sub_total+=$temp_total;
-                                            $ptotal = AuxTools::MoneyFormat($temp_total);
-                                                        $punit = AuxTools::MoneyFormat($product->SalePrice);
+                                            $ptotal = AuxTools::MoneyFormat($temp_total, $curr->CurrCode, $obj->CurrencyRate);
+                                                        $punit = AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $obj->CurrencyRate);
                                             $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
                                         endfor;
                                         $html.="
@@ -234,7 +233,7 @@ foreach($objs as $obj)
                                                 <td align=\"right\"><p style=\"margin-bottom:0px; font-size:16px; text-align:right; font-family:Arial !important;\">". JText::_('COM_CATALOG_TOTAL').":</p></td>
                                                 <td align=\"left\"><p style=\"margin-bottom:0px; font-size:16px; font-family:Arial !important;\" id=\"total_bill\"><strong>".  AuxTools::MoneyFormat($temp_total+$shipping->Price)."</strong></p></td>
                                         </tr>
-                                        </table><img src=\"https://www.freeroamingpanama.com/images/pointer.jpg\" /><div style=\"font-family:Arial !important;\" class=\"desc-pag\">$desc</div>";
+                                        </table><img src=\"http://www.margbillini.com/images/pointer.jpg\" /><div style=\"font-family:Arial !important;\" class=\"desc-pag\">$desc</div>";
                      $html.="</div></div>";
                      echo $html;
                 ?> 

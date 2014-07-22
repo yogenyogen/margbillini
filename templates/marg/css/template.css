@@ -2127,6 +2127,12 @@ table th[class*="span"],
 	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 }
+
+.banneritem
+{
+    margin-bottom:1%;
+}
+
 .well blockquote {
 	border-color: #ddd;
 	border-color: rgba(0,0,0,0.15);
@@ -2834,8 +2840,25 @@ input[type="submit"].btn.btn-mini {
 }
 .nav {
 	margin-left: 0;
-	margin-bottom: 18px;
 	list-style: none;
+}
+
+.title, .site-description
+{
+    color:#000;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-transform: uppercase;
+}
+.number_qty
+{
+    height:25px !important;
+}
+
+.nav li {
+    display:inline-block; 
+    padding:8px 30px 0px 30px;
+    text-transform: uppercase;
+    margin: 2px;
 }
 .nav > li > a {
 	display: block;
@@ -6989,11 +7012,19 @@ body.site.fluid {
 .header .finder .btn {
 	margin-top: 0px;
 }
+
+.cart-module
+{
+    padding:6px;
+    border-top: 2px solid rgba(0,0,0,1.0);
+    border-bottom: 2px solid rgba(0,0,0,1.0);   
+}
+
 .navigation {
-	padding: 5px 0;
-	border-top: 1px solid rgba(0,0,0,0.075);
-	border-bottom: 1px solid rgba(0,0,0,0.075);
-	margin-bottom: 10px;
+	padding: 0px 0;
+	border-top: 2px solid rgba(0,0,0,1.0);
+	border-bottom: 2px solid rgba(0,0,0,1.0);
+	margin-bottom: 0px;
 }
 .navigation .nav-pills {
 	margin-bottom: 0;
@@ -7010,14 +7041,14 @@ body.site.fluid {
 }
 .body .container {
 	background-color: #fff;
-	-moz-border-radius: 4px;
+/*	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
-	padding: 20px;
-	border: 1px solid rgba(0,0,0,0.15);
+	padding: 20px;*/
+/*	border: 1px solid rgba(0,0,0,0.15);
 	-moz-box-shadow: 0px 0px 6px rgba(0,0,0,0.05);
 	-webkit-box-shadow: 0px 0px 6px rgba(0,0,0,0.05);
-	box-shadow: 0px 0px 6px rgba(0,0,0,0.05);
+	box-shadow: 0px 0px 6px rgba(0,0,0,0.05);*/
 }
 .well .page-header {
 	margin: 0px 0px 5px 0px;
@@ -7125,10 +7156,15 @@ h6 {
 figure {
 	display: table;
 }
-figure.pull-center,
+figure.pull-center
+{
+	margin-left: auto;
+	margin-right: auto;
+}
 img.pull-center {
 	margin-left: auto;
 	margin-right: auto;
+        display:block;
 }
 figcaption {
 	display: table-caption;
@@ -7429,9 +7465,12 @@ code {
 }
 .header-block
 {
-    background-color:rgba(2,2,2,0.5);
+    //background-color:rgba(2,2,2,0.5);
 }   
-
+ul#curr_sel li select
+{
+    width:65px;
+}
 .header-block ul.menu li
 {
     float:left;

@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 $CA = JPATH_ADMINISTRATOR.'/components/com_catalog';
-require_once $CA.'/libs/defines.php';
+require_once JPATH_ROOT.'/libs/defines.php';
 require_once BASE_DIR.LIBS.INCLUDES;
 $lang = JFactory::getLanguage();
 $extension = 'com_catalog';

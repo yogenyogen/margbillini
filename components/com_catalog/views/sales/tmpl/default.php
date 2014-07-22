@@ -20,7 +20,7 @@ foreach($ro->getPathwayNames() as $p)
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
 $category = new bll_category(0);
 $root_categories = bll_category::getRootCategories();
-
+$curr = bll_currencies::getActiveCurrency();
 $sess=JFactory::getApplication()->getSession();
 $productsid = $sess->get('products', array());
 
@@ -56,6 +56,7 @@ if(isset($_GET['cid']))
       var min = 0;
       var max = 1000;
     jQuery( ".spinner" ).spinner({
+      disabled:true,
       spin: function( event, ui ) {
         if ( ui.value > max ) {
           jQuery( this ).spinner( "value", min );
@@ -101,14 +102,13 @@ if(isset($_GET['cid']))
   });
   
 </script>
-<div class="product-list">
+<div class="product-list row-fluid">
 <h3><i class="fa fa-heart fa-rotate-270"></i><span><?php echo JText::_('COM_CATALOG_CART_DETAIL'); ?></span><i class="fa fa-heart fa-rotate-90"></i>
 </h3>
 <div class="label_cart span12">
     <div class="span5"><?php echo JText::_('COM_CATALOG_PRODUCT'); ?></div>
-    <div class="span2"><?php echo JText::_('COM_CATALOG_PRICE'); ?></div>
-    <div class="span2"><?php echo JText::_('COM_CATALOG_QUANTITY'); ?></div>
-    <div class="span3"><?php echo JText::_('COM_CATALOG_TOTAL'); ?></div>
+    <div class="span3"><?php echo JText::_('COM_CATALOG_PRICE'); ?></div>
+    <div class="span3"><?php echo JText::_('COM_CATALOG_QUANTITY'); ?></div>
 </div>
     <form class="span12" method="POST" id="cart" action="<?php echo JRoute::_('index.php?option=com_catalog&view=sales&layout=payment');?>">
     <?php
@@ -123,50 +123,52 @@ if(isset($_GET['cid']))
             $ptotal+= $p->SalePrice*$cant;
             ?>
              <div class="span5">
-	
-				 <?php 
-			        $img = $p->getMainImage();
-			        $lval = $p->getLanguageValue($LangId);
-			        if(strlen($img->ImageUrl)> 4)
-			            $image = $img->ImageThumb;
-			        else
-			            $image='./components/com_catalog/images/no-image-product.jpg';
-			        ?>
-				 <img class="cart-image" src="<?php echo $image; ?>" />
+                 <?php 
+                $img = $p->getMainImage();
+                $lval = $p->getLanguageValue($LangId);
+                if(strlen($img->ImageUrl)> 4)
+                    $image = $img->ImageThumb;
+                else
+                    $image='./components/com_catalog/images/no-image-listing-detail.jpg';
+                ?>
+                 <img class="cart-image" src="<?php echo $image; ?>" />
                  <h4><?php echo $lval->Name; ?></h4>
                  <input type="hidden" name="p[]" value="<?php echo $p->Id ?>" />
                  <input type="hidden" id="price_<?php echo $p->Id ?>" name="price[]" value="<?php echo $p->SalePrice; ?>" />
              </div>
-             <div class="span2 price"><?php echo AuxTools::MoneyFormat($price); ?></div>
-             <div class="span2">
-               <input id="p_<?php echo $p->Id ?>" class="spinner span2" name="pc[]" value="<?php echo $cant; ?>">
-            
-                <button type="button" onclick="return addproducts(null);" >
-                    <i class="fa fa-refresh fa-2x"></i>
-                </button>
-                <button type="button" onclick="return addproducts('<?php echo $p->Id ?>');" >
-                    <i class="fa fa-trash-o fa-2x"></i>
-                </button>
+             <div class="span3 price"><?php echo AuxTools::MoneyFormat($price, $curr->CurrCode, $curr->Rate); ?></div>
+             <div class="span3">
+                 <div class="span5">
+                     <input id="p_<?php echo $p->Id ?>" class="spinner span2" name="pc2[]" value="<?php echo $cant; ?>">
+                     <input type="hidden" class="span2" name="pc[]" value="<?php echo $cant; ?>">
+                 </div>
+                 <div class="span5">
+                    <!--<button type="button" onclick="return addproducts(null);" >
+                            <i class="fa fa-refresh fa-2x"></i>
+                        </button>-->
+                        <button type="button" onclick="return addproducts('<?php echo $p->Id ?>');" >
+                            <i class="fa fa-trash-o fa-1x"></i>
+                        </button>
+                 </div>
+               
              </div>
-             <div id="total_<?php echo $p->Id ?>" class="span2 price"><?php echo AuxTools::MoneyFormat($ptotal); ?></div>
-            
             <?php
             $total+=$ptotal;
         }
     endforeach;
     ?>
-        <div class="span_total">
+        <div class="span12">
             <div class="right">
 		    <div class="coupon_code">
-	                <label><?php echo JText::_('COM_CATALOG_COUPON_CODE'); ?></label>
-	                <input type="text" id="check" name="_c_c_c" value="" />
-	                <button class="btn_blue" type="button" onclick="checkcoupon()">
+<!--	                <label><?php echo JText::_('COM_CATALOG_COUPON_CODE'); ?></label>-->
+	                <input type="hidden" id="check" name="_c_c_c" value="" />
+<!--	                <button class="btn_blue" type="button" onclick="checkcoupon()">
 	                    <?php echo JText::_('COM_CATALOG_CHECK'); ?>
-	                </button>
+	                </button>-->
 	            </div>
                 <div class="total_all">
                     <p><?php echo JText::_('COM_CATALOG_TOTAL'); ?>:
-                    <span id="total"><?php echo AuxTools::MoneyFormat($total); ?></span>
+                    <span id="total"><?php echo AuxTools::MoneyFormat($total, $curr->CurrCode, $curr->Rate); ?></span>
                     </p>
                 </div>
                 <div class="total_all2">

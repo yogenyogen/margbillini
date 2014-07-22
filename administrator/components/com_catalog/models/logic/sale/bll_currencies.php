@@ -210,8 +210,8 @@ class bll_currencies extends catalogcurrencies {
      */
     public static function getActiveCurrency()
     {
-        $jinput = JFactory::getApplication()->input;
-        $code=$jinput->getString('catalog_currency_code', DEFAULT_CURRENCY);
+        $jinput = JFactory::getApplication()->getSession();
+        $code=$jinput->get('catalog_currency_code', DEFAULT_CURRENCY);
         return self::findCurrencyByCode($code);
     }
     
@@ -222,7 +222,7 @@ class bll_currencies extends catalogcurrencies {
      */
     public static function setActiveCurrency($code)
     {
-        $jinput = JFactory::getApplication()->input;
+        $jinput = JFactory::getApplication()->getSession();
         if(self::findCurrencyByCode($code)->Id <= 0)
         {
             $code = DEFAULT_CURRENCY;

@@ -57,12 +57,15 @@ class bll_sale extends catalogsale {
                 return -5;
         
         $prod = array();
+        $curr = bll_currencies::getActiveCurrency();
         $total=0;
         if(count($Products) <= 0)
             return -6;
         foreach($Products as $pid => $cant)
         {
             $pro = new bll_product($pid);
+            if(count(bll_product::check_product_sales($pro->Id)) > 0)
+                return -6;
             if($pro->Id <= 0)
                 return -6;
             $prod[]=$pro;
@@ -79,19 +82,26 @@ class bll_sale extends catalogsale {
         //set data
         if($coupon->Id > 0)
         $sale->CouponId = $coupon->Id;
+        else
+        {
+            $sale->CouponId = NULL;
+        }
         $sale->UserId = $uid;
         $sale->Date = $date;
         $sale->PaymentMethodId =$payment->Id;
         $sale->SaleStateId = $salestate->Id;
         $sale->ShippingMethodId=$shipping->Id;
         $sale->Total = $total;
+        $sale->CurrencyId = $curr->Id;
+        $sale->CurrencyRate = $curr->Rate;
+        $sale->LangId  = AuxTools::GetCurrentLanguageIDJoomla();
         if($sale->insert($Products))
         {
             if($payment->External == 1)
             {
                 switch($payment->Id)
                 {
-                    case 1:
+                    case 5:
                         self::processPayULatam($sale, $Products, $shipping, $coupon);
                     break;
                 }
@@ -99,7 +109,9 @@ class bll_sale extends catalogsale {
             }
             //payment is not processed by a third-party we're done.
             else
+            {
                 return 1;
+            }
         }
         return 0;
     }

@@ -6,13 +6,19 @@ if(isset($_REQUEST['pid']))
 }
 $product = new bll_product($id);
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
+$language = new languages($LangId);
 $img = $product->getMainImage();
 $lval = $product->getLanguageValue($LangId);
 
+$document = JFactory::getDocument();
+$document->setTitle($lval->Name);
+$document->setDescription(strip_tags($lval->Description));
 if(strlen($img->ImageUrl)> 4)
     $image = $img->ImageUrl;
 else
     $image='./components/com_catalog/images/no-image-listing-detail.jpg';
+
+$curr = bll_currencies::getActiveCurrency();
 
 ?>
 <script type="text/javascript">
@@ -38,15 +44,16 @@ function addproduct(pid)
     
     var cant=jQuery("#quantity").val();
     jQuery.ajax({
-        url:"../index.php?option=com_catalog&task=setproduct&format=json", 
+        url:"/<?php echo $language->sef; ?>?option=com_catalog&task=setproduct&format=json", 
         data:{ pid: pid, cant: jQuery("#quantity").val() },
         dataType:'json'
         }
     ).done(function( data, textStatus, jqXHR) {
             var c=data;
             var price = "<?php echo $product->SalePrice; ?>";
-            var curr = "<?php echo DEFAULT_CURRENCY; ?>";
-            var str=cant+" x "+curr+(cant*price);
+            var curr = "<?php echo $curr->CurrCode; ?>";
+            var curr_rate=<?php echo $curr->Rate ?>;
+            var str=cant+" x "+curr+((cant*price)*curr_rate);
             jQuery("#cantelem").html("");
             jQuery("#cantelem").html(str);
             var html= c[0] +" <?php echo JText::_('COM_CATALOG_CART_ARTICLES_FOR')." " ?>"+c[1];
@@ -61,63 +68,56 @@ function addproduct(pid)
     return false;
 }
 </script>
-<div id="dialog" title="El producto fue anadido correctamente">
+<div id="dialog" title="<?php echo JText::_('COM_CATALOG_PRODUCT_ADDED') ?>">
     <div id="dialog-product-detail">
         
     </div>
-    <a class="button" onclick="$( '#dialog' ).dialog( 'close' );">Seguir comprando</a>
-    <a class="button" href="index.php?option=com_catalog&view=sales">Ir al carrito</a>
+    <a class="button" onclick="$( '#dialog' ).dialog( 'close' );"><?php echo JText::_('COM_CATALOG_KEEP_BUYING') ?></a>
+    <a class="button" href="index.php?option=com_catalog&view=sales"><?php echo JText::_('COM_CATALOG_CHECKOUT') ?></a>
 </div>
  <div style="display:none;" id="list-product-detail-<?php echo $product->Id ?>">
      <img id="image-popup" src="<?php echo $image; ?>" />
      <p><?php echo $product->getLanguageValue($LangId)->Name; ?></p>
      <p id="cantelem"></p>
  </div>
-<div class="product_detail">
-	<h4><i class="fa fa-heart fa-rotate-270"></i><span>
+<div class="product row-fluid">
+	<h4 class="span12">
+            <i class="fa fa-heart fa-rotate-270"></i>
+            <span>
     <?php 
-
     echo $lval->Name;
-
-    ?></span><i class="fa fa-heart fa-rotate-90"></i>
+    ?></span>
+            <i class="fa fa-heart fa-rotate-90"></i>
     </h4>
-    <div class="top-holder">
-        <div class="img-holder">
+    <div class="span4">
             <img class="lis-image" src="<?php echo $image; ?>" />
+    </div>
+    <div class="span7">
+        <div class="description span12">
+            <?php 
+            echo $lval->Description;
+            ?>
         </div>
-        <div class="top-info">
-
-            
-            
-            <div class="description">
+        <div class="span12">
+                <input id="quantity" class="number_qty" value="1" type="hidden" name="quantity" min="1" max="15">
+        
+        <hr/>        
+        <p class="price">
                 <?php 
-                echo $lval->Description;
+                echo AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
                 ?>
-            </div>
-			<div class="line"></div>
-			<div class="sep_corchete">
-			<div class="all_right_content">
-					<input id="quantity" class="number_qty" value="1" type="number" name="quantity" min="1" max="15">
-					<div class="line"></div>
-					<p class="price">
-	                	<?php 
-	                	echo AuxTools::MoneyFormat($product->SalePrice);
-	                	?>
-	            	</p>
-					<div class="line"></div>
-                        <button type="button" id="order" href="#" onclick="return addproduct(<?php echo $product->Id; ?>);">
-	                        <?php echo JText::_('COM_CATALOG_ORDER') ?><i class="fa fa-shopping-cart fa-3x"></i>
-	                </button>
-            	<div class="note">
-                	<?php 
-                	echo $lval->Note;
-                	?>
-            	</div>
-            </div>
-                   
-          </div>
-          
-            
+        </p>
+        <?php if(count(bll_product::check_product_sales($product->Id)) <= 0): ?>
+        <button type="button" id="order" href="#" onclick="return addproduct(<?php echo $product->Id; ?>);">
+                <?php echo JText::_('COM_CATALOG_ORDER') ?><i class="fa fa-shopping-cart fa-3x"></i>
+        </button>
+        <?php endif; ?>
         </div>
+    </div>
+    <hr>
+    <div class="span12 note">
+            <?php 
+            echo $lval->Note;
+            ?>
     </div>
 </div>

@@ -62,11 +62,11 @@ else
 
 ?>
 
-<script type="text/javascript" src="<?php echo $jspath. LIBS . JS . JQUERY; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
-<link rel="stylesheet" href="<?php echo $jspath. LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" /> 
-<script type="text/javascript" src="<?php echo $jspath. LIBS . JS . MASKED_INPUTS_JQUERY; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath. LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>
+
+<script type="text/javascript" src="../<?php echo LIBS . JS . JQUERY; ?>"></script>
+<script type="text/javascript" src="../<?php echo LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
+<link rel="stylesheet" href="../<?php echo LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
+<script type="text/javascript" src="../<?php echo LIBS . JS . MASKED_INPUTS_JQUERY; ?>"></script>
 <script type="text/javascript" >
 
     var nimg = <?php echo count($images); ?>;
@@ -203,10 +203,10 @@ else
         $form->Text('Name_'.$lang->lang_id, $langval->Name, '', 'Labels', true);
        
         $form->Label(JText::_('COM_CATALOG_DESCRIPTION')."($lang->title_native)", 'Description_'.$lang->lang_id);
-        $form->Editor('Description_'.$lang->lang_id, $langval->Description, 'default_tiny_id_'.$lang->lang_id, 'default_tiny_class_'.$lang->lang_id);
+        $form->JEditor('Description_'.$lang->lang_id, $langval->Description, 300,300,40,40);
         
         $form->Label(JText::_('COM_CATALOG_NOTE')."($lang->title_native)", 'Note_'.$lang->lang_id);
-        $form->Editor('Note_'.$lang->lang_id, $langval->Note, '_default_tiny_id_'.$lang->lang_id, '_default_tiny_class_'.$lang->lang_id);
+        $form->JEditor('Note_'.$lang->lang_id, $langval->Note,300,300,40,40);
 
     }
 

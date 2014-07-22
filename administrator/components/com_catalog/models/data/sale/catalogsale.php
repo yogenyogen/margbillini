@@ -20,6 +20,9 @@ class catalogsale extends dbobject {
     public $Total=0;
     public $Date="";
     public $CouponId=0;
+    public $CurrencyId=0;
+    public $CurrencyRate=0;
+    public $LangId=0;
         
     public function __construct($id) {
         parent::__construct($id, get_class());

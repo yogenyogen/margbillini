@@ -13,16 +13,11 @@ if(isset($_REQUEST['limitstart']))
 $obj = new bll_sale($id);
 $lang = new languages(AuxTools::GetCurrentLanguageIDJoomla());
 
-$jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT); 
-
 ?>
 
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY; ?>"></script>
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
-<link rel="stylesheet" href="<?php echo $jspath . LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
-<script type="text/javascript" src="<?php echo $jspath . LIBS . JS . TINYMCE . TINYMCE_JQUERY; ?>"></script>
-
-
+<script type="text/javascript" src="../<?php echo  LIBS . JS . JQUERY; ?>"></script>
+<script type="text/javascript" src="../<?php echo  LIBS . JS . JQUERY_UI . JQUERY_UI_CORE; ?>"></script>
+<link rel="stylesheet" href="../<?php echo  LIBS . JS . JQUERY_UI . JQUERY_CSS . JQUERY_UI_CSS; ?>" />  
 
 <div id="j-main-container" class="span10">   
     <div class="btn-toolbar" id="toolbar">
@@ -52,7 +47,6 @@ $jspath = AuxTools::getJSPathFromPHPDir(JPATH_ROOT);
         $dbarr[]= $ss->getLanguageValue($lang->lang_id);
     }
     $arr=$saleState->setSelectValues('Name', 'SaleStateId', $obj->SaleStateId, $dbarr);
-    
     $form->Label(JText::_('COM_CATALOG_SALE_STATE'), 'SaleStateId');
     $form->SelectBox('SaleStateId', $arr, '', 'Labels', true);
 

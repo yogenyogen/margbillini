@@ -47,11 +47,13 @@ if(count($root_categories) > 0):
 	                    <a href="./index.php/<?php echo $url; ?>">
                                 <img src="<?php echo $imguri; ?>" />
                             </a>
+                            <p>
                             <a href="./index.php/<?php echo $url; ?>">
 	                    <?php 
 	                        echo $lval->Name;
 	                    ?>
 	                    </a>
+                            </p>    
 	                </div>
 	                <?php
 	            $index++;

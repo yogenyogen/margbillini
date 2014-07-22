@@ -230,6 +230,9 @@ class bll_shippingmethod extends catalogshippingmethod {
      */
     public static function checkCity($method, $cid)
     {
+        $sm = new bll_shippingmethod($method);
+        if($sm->Global == '1')
+            return true;
         $sc = new catalogshippingcities(0);
         $result=$sc->findAll(
                               array(

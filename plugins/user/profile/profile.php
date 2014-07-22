@@ -350,6 +350,7 @@ class PlgUserProfile extends JPlugin
 			try
 			{
 				// Convert website url to punycode
+                                if(isset($data['profile']['website']))
 				$data['profile']['website'] = JStringPunycode::urlToPunycode($data['profile']['website']);
 
 				$date = new JDate($data['profile']['dob']);
