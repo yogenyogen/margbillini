@@ -180,6 +180,7 @@ class HtmlGenerator {
      * @param string $name name of the form to submit
      * @param string $uri  string with the uri to the pagination
      * @param integer $number_of_elements maximun number of elements
+     * @param integer $limitstart where
      * @param integer $elements_by_page number of elements displayed by page
      * @param array   $data hash of data to save in the pagination form
      *
@@ -191,6 +192,7 @@ class HtmlGenerator {
         $datahtml='';
         $n_int_pages = intval(($number_of_elements) / $elements_by_page);
         $n_pages = (($number_of_elements) / $elements_by_page);
+        
         if ($n_pages > $n_int_pages)
             $n_pages = $n_int_pages + 1;
         else
@@ -232,7 +234,7 @@ class HtmlGenerator {
         if ($page_displayed > 1) 
         {
             $go_to_first_page = '<li><button title="Primero" onclick="document.' . $name . '.limitstart.value=0;"><i class="icon-first"></i></button></li>';
-            $prev = '<li><button title="Atras" onclick="document.' . $name . '.limitstart.value=' . (($page_displayed - 1 - 1) * $elements_by_page) . '; "><i class="icon-previous"></i></button></li>';
+            $prev = '<li><button title="Atras" onclick="document.' . $name . '.limitstart.value=' . (($page_displayed - 1) * $elements_by_page) . '; "><i class="icon-previous"></i></button></li>';
         }
         else
         {
@@ -241,8 +243,11 @@ class HtmlGenerator {
         if ($page_displayed < $n_pages) 
         {
             $last_limit = ($n_pages - 1) * $elements_by_page;
+            $next_limit=(($page_displayed + 1) * $elements_by_page);
+            if($next_limit > $number_of_elements)
+                $next_limit = $last_limit;
             $go_to_last_page = '<li><button title="Final" onclick="document.' . $name . '.limitstart.value=' . $last_limit . ';"><i class="icon-last"></i></button></li>';
-            $next = '<li><button title="Siguiente" onclick="document.' . $name . '.limitstart.value=' . (($page_displayed + 1 - 1) * $elements_by_page) . '; "><i class="icon-next"></i></button></li>';
+            $next = '<li><button title="Siguiente" onclick="document.' . $name . '.limitstart.value=' . $next_limit . '; "><i class="icon-next"></i></button></li>';
         } 
         else 
         {

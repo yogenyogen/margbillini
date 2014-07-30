@@ -129,6 +129,7 @@ $locations= country::getLocationTree();
                   autoOpen: false,
                   modal:true,
                   width: 'auto',
+                  position:{ my: "center", at: "center", of: jQuery('body') },
                   show: {
                     effect: "explode",
                     duration: 500

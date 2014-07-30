@@ -8,6 +8,7 @@ $product = new bll_product($id);
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
 $language = new languages($LangId);
 $img = $product->getMainImage();
+$images = $product->getImages();
 $lval = $product->getLanguageValue($LangId);
 
 $document = JFactory::getDocument();
@@ -19,8 +20,16 @@ else
     $image='./components/com_catalog/images/no-image-listing-detail.jpg';
 
 $curr = bll_currencies::getActiveCurrency();
-
+$document->addStyleSheet('./templates/marg/css/pikachoose/bottom.css');
 ?>
+<script type="text/javascript" src="./pikachoose/lib/jquery.jcarousel.min.js"></script>
+<script type="text/javascript" src="./pikachoose/lib/jquery.pikachoose.min.js"></script>
+<script type="text/javascript" src="./pikachoose/lib/jquery.touchwipe.min.js"></script>
+<script language="javascript">
+        jQuery(document).ready(function (){
+                jQuery("#pikame").PikaChoose({carousel:true,transition:[3]});
+        });
+</script>
 <script type="text/javascript">
 jQuery(function() 
 {
@@ -28,6 +37,7 @@ jQuery(function()
       autoOpen: false,
       modal:true,
       width: 'auto',
+      position:{ my: "center", at: "center", of: jQuery('body') },
       show: {
         effect: "blind",
         duration: 500
@@ -76,11 +86,11 @@ function addproduct(pid)
     <a class="button" href="index.php?option=com_catalog&view=sales"><?php echo JText::_('COM_CATALOG_CHECKOUT') ?></a>
 </div>
  <div style="display:none;" id="list-product-detail-<?php echo $product->Id ?>">
-     <img id="image-popup" src="<?php echo $image; ?>" />
+     <img class="span4" id="image-popup" src="<?php echo $image; ?>" />
      <p><?php echo $product->getLanguageValue($LangId)->Name; ?></p>
      <p id="cantelem"></p>
  </div>
-<div class="product row-fluid">
+<div class="span12 row-fluid">
 	<h4 class="span12">
             <i class="fa fa-heart fa-rotate-270"></i>
             <span>
@@ -89,10 +99,36 @@ function addproduct(pid)
     ?></span>
             <i class="fa fa-heart fa-rotate-90"></i>
     </h4>
-    <div class="span4">
-            <img class="lis-image" src="<?php echo $image; ?>" />
+    <div class="span5">
+        <?php 
+        if(count($images) <= 0)
+        {
+          ?>
+          <img class="lis-image" src="<?php echo $image; ?>" />    
+          <?php  
+        }
+        else
+        {
+        ?>
+        <ul id="pikame" class="jcarousel-skin-pika">
+        <?php foreach($images as $imgobj):
+            if(strlen($imgobj->ImageUrl)> 4)
+            {
+                $imar = $imgobj->ImageUrl;
+            }
+            else
+            {
+                $imar='./components/com_catalog/images/no-image-listing-detail.jpg';
+            }
+            ?>
+            <li><a><img class="lis-image" src="<?php echo $imar ?>" /></a><span></span></li>
+        <?php endforeach; ?>
+        </ul>
+        <?php
+        }
+        ?>
     </div>
-    <div class="span7">
+    <div class="span6">
         <div class="description span12">
             <?php 
             echo $lval->Description;

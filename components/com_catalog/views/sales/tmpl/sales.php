@@ -51,6 +51,7 @@ foreach($objs as $obj)
     $shipping = new bll_shippingmethod($obj->ShippingMethodId);
     $salestate = new bll_salestate($obj->SaleStateId);
     $products = bll_sale::getProductsFromSale($obj->Id);
+    $curr= new bll_currencies($obj->CurrencyId);
     $productsid = array();
     $productscant = array();
     if(isset($products[0]))
@@ -63,16 +64,17 @@ foreach($objs as $obj)
 
     <tr>
         <td> <?php echo $obj->Id; ?></td>
-        <td> <?php echo AuxTools::MoneyFormat($obj->Total); ?></td>
+        <td> <?php echo AuxTools::MoneyFormat($obj->Total, $curr->CurrCode, $obj->CurrencyRate); ?></td>
         <td> <?php echo $obj->Date; ?></td>
         <td><?php echo $payment->getLanguageValue($LangId)->Name; ?></td>
         <td><?php echo $shipping->getLanguageValue($LangId)->Name; ?></td>
         <td><?php echo $salestate->getLanguageValue($LangId)->Name; ?></td>
         <td>
             <script>
-             $(function() {
-              $( "#dialog-<?php echo $obj->Id; ?>" ).dialog({
+             jQuery(function() {
+              jQuery( "#dialog-<?php echo $obj->Id; ?>" ).dialog({
                 autoOpen: false,
+                modal:true,
                 show: {
                   effect: "blind",
                   duration: 300
@@ -83,8 +85,8 @@ foreach($objs as $obj)
                 }
               });
 
-              $( "#detail-<?php echo $obj->Id; ?>" ).click(function() {
-                $( "#dialog-<?php echo $obj->Id; ?>" ).dialog( "open" );
+              jQuery( "#detail-<?php echo $obj->Id; ?>" ).click(function() {
+                jQuery( "#dialog-<?php echo $obj->Id; ?>" ).dialog( "open" );
               });
             });
             </script>
@@ -100,7 +102,7 @@ foreach($objs as $obj)
                     $ptotal = ($product->SalePrice-$preduce)*$productscant[$i];
                     $sale_total+=$ptotal;
                     ?>
-                    <p><?php echo JText::_('COM_CATALOG_PLANS'); ?></p>
+                    <p><?php echo JText::_('COM_CATALOG_PRODUCT'); ?></p>
                     <div class="span12">
                         <?php echo $product->getLanguageValue($LangId)->Name; ?> x <?php echo $productscant[$i]; ?>(<?php echo AuxTools::MoneyFormat($ptotal, $curr->CurrCode, $curr->Rate); ?>)
                     </div>

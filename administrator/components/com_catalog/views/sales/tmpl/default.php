@@ -91,7 +91,7 @@ $pmethods = $pmethods->findAll();
     </table>
     </form>
     <h3>
-        <?php  echo JText::_('COM_CATALOG_CITIES')." ". JText::_('COM_CATALOG_MANAGER'); ?>
+        <?php  echo JText::_('COM_CATALOG_SALES')." ". JText::_('COM_CATALOG_MANAGER'); ?>
     </h3>
     <table class="table table-striped">
         <tr>
@@ -251,6 +251,8 @@ foreach($objs as $obj)
 ?>
       </table>
     <?php
-    echo HtmlGenerator::GeneratePagination($ob->getObjectName(), './index.php?option=com_catalog&view=sales', $total, $lower_limit, $nelementsbypage, $array_pag_params);
+    echo HtmlGenerator::GeneratePagination($ob->getObjectName(), 
+            './index.php?option=com_catalog&view=sales',
+            $total, $lower_limit, $nelementsbypage, $array_pag_params);
     ?>
 </div>

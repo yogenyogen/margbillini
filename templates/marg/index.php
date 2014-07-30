@@ -148,7 +148,7 @@ else
 		<div class="container<?php echo ($params->get('fluidContainer') ? '-fluid' : '');?>">
 			<!-- Header -->
                         <header class="header row-fluid">
-                                <div class="pull-right span12">
+                                <div id="top-right-modules" class="pull-right span12">
                                     <jdoc:include type="modules" name="position-0" style="none" />
                                 </div>
                                 <div class="clearfix span12">

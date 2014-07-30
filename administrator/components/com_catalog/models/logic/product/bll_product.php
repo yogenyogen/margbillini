@@ -137,7 +137,7 @@ class bll_product extends catalogproduct {
         $index =0;
         foreach($products as $pobj)
         {
-            if($index >= $lower_limit && $index < $upper_limit)
+            if($index >= $lower_limit && $index < ($lower_limit+$upper_limit))
             {
                 $final_arr[]= new bll_product($pobj->Id);
             }
@@ -892,21 +892,15 @@ class bll_product extends catalogproduct {
      */
 
     public function getMainImage()
-
     {
-
            $images  = $this->getImages();
-
            foreach($images as $img)
-
            {
-
-               if($img->Main != 0)
-
+               if($img->Main == '1')
+               {
                    return $img;
-
+               }
            }
-
            return new catalogproductimage(0);
 
     }

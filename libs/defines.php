@@ -38,7 +38,7 @@ define('LIBS', '/libs/');
 ///javascript files
 
 define('JS', 'js/');
-define('JQUERY_CSS', 'css/ui-lightness/');
+define('JQUERY_CSS', 'css/smoothness/');
 define('JQUERY_UI_CSS', 'jquery-ui-1.10.4.css');
 define('JQUERY_UI_CSS_MIN', 'jquery-ui-1.10.4.min.css');
 define('JQUERY_UI', 'ui/');

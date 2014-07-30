@@ -29,11 +29,7 @@ if(isset($_POST['limitstart']))
 
 $elements_by_page=12;
 $total = count(bll_product::find_products($cat->Id));
-$page_displayed=1;
-if(($limitstart)!= 0)
-{
-    $page_displayed=($elements_by_page+$limitstart)/$elements_by_page;   
-}
+
 $document = JFactory::getDocument();
 $document->setTitle($cat->getLanguageValue($LangId)->Name);
 $document->setDescription(strip_tags($cat->getLanguageValue($LangId)->Description));
@@ -42,12 +38,23 @@ $products = bll_product::find_products($cat->Id,$limitstart, $elements_by_page);
 $curr = bll_currencies::getActiveCurrency();
 ?>
 <h1><?php echo JText::_('COM_CATALOG_CATALOG'); ?></h1>
-<div class="products-holder" class="row-fluid">
+<div class="products-holder span12">
     <h4>
         <?php echo $catlv->Name; ?>
     </h4>
-    <div class="span12">
-            <?php foreach($products as $product): ?>
+    <div class="span12 row-fluid">
+            <?php 
+            $index=0;
+            foreach($products as $product): 
+            if($index%4 == 0 && $index > 0):    
+                ?>
+             </div>
+             <div class="clearfix"><hr></div>
+             <div class="span12 row-fluid">
+            <?php 
+            endif;
+            $index++;
+            ?>
             <div class="span3">
                 <?php 
                 $img = $product->getMainImage();
@@ -71,8 +78,10 @@ $curr = bll_currencies::getActiveCurrency();
             <?php endforeach; ?>
     </div>
 </div>
+<div class="span12">
 <?php 
 
 echo HtmlGenerator::GeneratePagination($product->getObjectName(), "", 
-                        $total, $page_displayed, $elements_by_page, array('cid'=>$cat->Id));
+                        $total, $limitstart,$elements_by_page, array('cid'=>$cat->Id));
 ?>
+</div>

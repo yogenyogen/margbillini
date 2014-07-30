@@ -189,7 +189,7 @@ textarea {
 }
 body {
 	margin: 0;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: Verdana, Geneva, sans-serif;
 	font-size: 13px;
 	line-height: 18px;
 	color: #333;
@@ -2846,7 +2846,7 @@ input[type="submit"].btn.btn-mini {
 .title, .site-description
 {
     color:#000;
-    font-family: Tahoma, Geneva, sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     text-transform: uppercase;
 }
 .number_qty
@@ -3334,7 +3334,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-search .search-query {
 	margin-bottom: 0;
 	padding: 4px 14px;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: Verdana, Geneva, sans-serif;
 	font-size: 13px;
 	font-weight: normal;
 	line-height: 1;
@@ -3725,7 +3725,21 @@ input[type="submit"].btn.btn-mini {
 }
 .pagination {
 	margin: 18px 0;
+        text-align:center;
 }
+.pagination button {
+	border:none;
+        background:none;
+}
+
+.pagination button:hover {
+	border:1px solid #000;
+}
+
+.pagination button[disabled=disabled]:hover , button:disabled:hover {
+	border:none;
+}
+
 .pagination ul {
 	display: inline-block;
 	*display: inline;
@@ -7476,3 +7490,10 @@ ul#curr_sel li select
     float:left;
     color:#fff;
 }
+
+div#top-right-modules div.curr-holder,
+div#top-right-modules form#login-form
+{
+    float:right;
+}
+
