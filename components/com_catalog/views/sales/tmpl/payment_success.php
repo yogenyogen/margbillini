@@ -101,7 +101,7 @@ $html.="
 		                $preduce = $product->SalePrice*($coupon->Discount/100);
 		            $ptotal = AuxTools::MoneyFormat(($product->SalePrice-$preduce)*$productscant[$i], $curr->CurrCode, $sale->CurrencyRate);
 					$punit = AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $sale->CurrencyRate);
-		            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
+		            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">$product->Id - ".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
 		        endfor;
 			$html.="
 		</table>

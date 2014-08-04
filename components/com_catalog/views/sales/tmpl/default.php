@@ -131,7 +131,7 @@ if(isset($_GET['cid']))
                 else
                     $image='./components/com_catalog/images/no-image-listing-detail.jpg';
                 ?>
-                 <img class="cart-image" src="<?php echo $image; ?>" />
+                 <img style="height:100px;" class="cart-image" src="<?php echo $image; ?>" />
                  <h4><?php echo $lval->Name; ?></h4>
                  <input type="hidden" name="p[]" value="<?php echo $p->Id ?>" />
                  <input type="hidden" id="price_<?php echo $p->Id ?>" name="price[]" value="<?php echo $p->SalePrice; ?>" />

@@ -36,21 +36,21 @@ $document->setDescription(strip_tags($cat->getLanguageValue($LangId)->Descriptio
 $products = bll_product::find_products($cat->Id,$limitstart, $elements_by_page);
 
 $curr = bll_currencies::getActiveCurrency();
+
+if($total > 0){
 ?>
-<h1><?php echo JText::_('COM_CATALOG_CATALOG'); ?></h1>
-<div class="products-holder span12">
-    <h4>
+    <h1 class="span12">
         <?php echo $catlv->Name; ?>
-    </h4>
-    <div class="span12 row-fluid">
+    </h1>
+    <div class="span12 no-margin-left">
             <?php 
             $index=0;
             foreach($products as $product): 
             if($index%4 == 0 && $index > 0):    
                 ?>
              </div>
-             <div class="clearfix"><hr></div>
-             <div class="span12 row-fluid">
+             <div class="clearfix span12  no-margin-left"><hr></div>
+             <div class="span12  no-margin-left">
             <?php 
             endif;
             $index++;
@@ -65,9 +65,9 @@ $curr = bll_currencies::getActiveCurrency();
                     $image='./components/com_catalog/images/no-image-listing.jpg';
 
                 ?>
-                <a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><img class="lis-image" src="<?php echo $image; ?>" /></a>
+                <a href="<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><img class="lis-image" src="<?php echo $image; ?>" /></a>
                 <div>
-                    <h3><a href="./index.php/<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
+                    <h3><a href="<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
                 </div>
                 <div>
                     <?php 
@@ -77,11 +77,15 @@ $curr = bll_currencies::getActiveCurrency();
             </div>
             <?php endforeach; ?>
     </div>
-</div>
 <div class="span12">
 <?php 
-
 echo HtmlGenerator::GeneratePagination($product->getObjectName(), "", 
-                        $total, $limitstart,$elements_by_page, array('cid'=>$cat->Id));
+                       $total, $limitstart,$elements_by_page, array('cid'=>$cat->Id));
 ?>
 </div>
+<?php
+}
+else
+{
+    echo "<p>".JText::_('COM_CATALOG_NO_PRODUCTS_AVAILABLE')."</p>";
+}

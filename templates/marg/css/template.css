@@ -7497,3 +7497,8 @@ div#top-right-modules form#login-form
     float:right;
 }
 
+.no-margin-left
+{
+    margin-left:0%!important;
+}
+

@@ -27,7 +27,7 @@ $document->addStyleSheet('./templates/marg/css/pikachoose/bottom.css');
 <script type="text/javascript" src="./pikachoose/lib/jquery.touchwipe.min.js"></script>
 <script language="javascript">
         jQuery(document).ready(function (){
-                jQuery("#pikame").PikaChoose({carousel:true,transition:[3]});
+                jQuery("#pikame").PikaChoose({carousel:true,transition:[0]});
         });
 </script>
 <script type="text/javascript">

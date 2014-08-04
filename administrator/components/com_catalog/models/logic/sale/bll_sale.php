@@ -104,6 +104,9 @@ class bll_sale extends catalogsale {
                     case 5:
                         self::processPayULatam($sale, $Products, $shipping, $coupon);
                     break;
+                    case 3:
+                        self::process2Checkout($sale, $Products, $shipping, $coupon);
+                    break;
                 }
                 return 1;
             }
@@ -127,7 +130,6 @@ class bll_sale extends catalogsale {
     {
         $twoCO = new twoCO();
         $twoCO->ActivateTestMode();
-        
         $user= JFactory::getUser($sale->UserId);
         $profile = JUserHelper::getProfile($user->id)->getProperties();
         $profile = $profile['profile'];
@@ -151,7 +153,11 @@ class bll_sale extends catalogsale {
         $twoCO->setship_State($province->Name);
         $twoCO->setship_StreetAddress($profile['address1']);
         $twoCO->setship_StreetAddress2($profile['address2']);
-        $LangId =  AuxTools::GetCurrentLanguageIDJoomla();
+        if(isset($_REQUEST['x_receipt_link']))
+        {
+            $twoCO->setx_receipt_link_url($_REQUEST['x_receipt_link']);
+        }
+        $LangId =AuxTools::GetCurrentLanguageIDJoomla();
         foreach($Products as $pid => $cant)
         {
             $p = new bll_product($pid);

@@ -258,6 +258,11 @@ class CatalogController extends JControllerLegacy
         {
             $Products[$p[$i]]=$pc[$i];
         }
+        if($pmid == 3)
+        {
+            $_REQUEST['x_receipt_link']=
+            JRoute::_("/index.php?option=com_catalog&task=twocheckout_confirmation");
+        }
         //1 if sale is created successfully, redirect if payment is
         //processed by a third party
         $ret=bll_sale::createSale($Products, $uid, $pmid, $stateid, 
@@ -555,6 +560,47 @@ class CatalogController extends JControllerLegacy
             
         }
         $this->redirect();
+    }
+    
+    function twocheckout_confirmation()
+    {
+        $two = new twoCO();
+        $two->ActivateTestMode();
+        $hashOrder = $_REQUEST['order_number']; //2Checkout Order Number
+        $hash=$_REQUEST['key'];
+        $referenceCode = $_REQUEST['merchant_order_id'];
+        $sale = new bll_sale($referenceCode);
+        $total = $_REQUEST['total'];
+        $msg=JText::_('COM_CATALOG_TWO_CHECKOUT_CARD_NOT_PROCESSED');
+        $uri=("/index.php?option=com_catalog&view=sales&layout=sales");
+        if($two->CheckSale($hashOrder, $total, $hash) ==true)
+        {
+            if($_REQUEST['credit_card_processed'] == 'Y')
+            {
+                $products = array();
+                $cant=array();
+                $details=bll_sale::getProductsFromSale($sale->Id);
+                if(isset($details[0]))
+                    $products = $details[0];
+                if(isset($details[1]))
+                    $cant=$details[1];
+                $sale->SaleStateId=1;
+                $sale->update();
+                $shipping = new bll_shippingmethod($sale->ShippingMethodId);
+                $msg=(JText::_('COM_CATALOG_TWO_CHECKOUT_ORDER_COMPLETED'));
+                $vars = http_build_query(array('total'=>($total-$shipping->Price),'p'=>$products, 'pc'=>$cant, 'pmid'=>$sale->PaymentMethodId, 'smid'=>$sale->ShippingMethodId, 'cid'=>$sale->CouponId, 'sid'=>$sale->Id));
+                $uri=('/index.php?option=com_catalog&view=sales&layout=payment_success'.'&'.$vars);
+            }
+        }
+        else
+        {
+            $msg=JText::_('COM_CATALOG_TWO_CHECKOUT_INVALID_HASH');
+        }
+        $uri=JRoute::_($uri);
+        $this->setMessage($msg);
+        $this->setRedirect($uri);
+        $this->redirect();
+        exit;
     }
     
     function get_cart_summary()

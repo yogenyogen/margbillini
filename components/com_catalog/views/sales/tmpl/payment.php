@@ -112,6 +112,11 @@ $locations= country::getLocationTree();
 
     </div>
 <?php endif; ?>
+<style>
+    form ul li{
+        list-style: none;
+    }
+</style>
 <script>
     jQuery(document).ready(function(){
       <?php  if($user->guest)
@@ -649,12 +654,9 @@ $locations= country::getLocationTree();
             <?php 
 
             foreach($smethods as $shipping)
-
             {
 
-                echo '<input disabled="disabled" required="required" onchange="shipping()" id="sm_'.$shipping->Id.'" type="radio" name="smid" value="'.$shipping->Id.'" />
-
-                    <label>'.$shipping->getLanguageValue($LangId)->Name.''.AuxTools::MoneyFormat($shipping->Price,$curr->CurrCode, $curr->Rate).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
+                echo '<input disabled="disabled" required="required" onchange="shipping()" id="sm_'.$shipping->Id.'" type="radio" name="smid" value="'.$shipping->Id.'" /> <label>'.$shipping->getLanguageValue($LangId)->Name.''.AuxTools::MoneyFormat($shipping->Price,$curr->CurrCode, $curr->Rate).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
 
             }
 
@@ -668,7 +670,7 @@ $locations= country::getLocationTree();
 
 		<li>
 
-        <button class="back" type="button" onclick="$('#accordion').accordion({active:$( '#accordion' ).accordion( 'option', 'active' )-1});">
+        <button class="back" type="button" onclick="jQuery('#accordion').accordion({active:jQuery( '#accordion' ).accordion( 'option', 'active' )-1});">
 
             <?php echo JText::_('COM_CATALOG_PREVIOUS'); ?>
 
@@ -878,7 +880,7 @@ $locations= country::getLocationTree();
 
 		                       value="/index.php?option=com_catalog&view=sales&layout=payment" />
 
-		            <button class="back" type="button" onclick="$('#accordion').accordion({active:$( '#accordion' ).accordion( 'option', 'active' )-1});">
+		            <button class="back" type="button" onclick="jQuery('#accordion').accordion({active:jQuery( '#accordion' ).accordion( 'option', 'active' )-1});">
 
 		                <?php echo JText::_('COM_CATALOG_PREVIOUS'); ?>
 		            </button>

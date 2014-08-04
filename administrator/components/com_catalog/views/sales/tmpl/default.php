@@ -47,7 +47,12 @@ $pmethods = $pmethods->findAll();
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.9.1.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
+<style>
+    .ui-dialog
+    {
+        z-index:1500;
+    }
+</style>
 <div id="j-main-container" class="span10"> 
     <div class="btn-toolbar" id="toolbar">
         <div class="btn-wrapper" id="toolbar-new">
@@ -155,7 +160,26 @@ foreach($objs as $obj)
                 hide: {
                   effect: "blind",
                   duration: 300
-                }
+                },
+                buttons: [
+                {
+                  text: "Close",
+                  click: function() {
+                    $( this ).dialog( "close" );
+                  }
+                },
+                {
+                  text: "Print",
+                  click: function() {
+                    var prtContent = document.getElementById("dialog-<?php echo $obj->Id; ?>");
+                    var WinPrint = window.open('', '', 'letf=0,top=0,width=auto,height=auto,toolbar=0,scrollbars=0,status=0');
+                    WinPrint.document.write(prtContent.innerHTML);
+                    WinPrint.document.close();
+                    WinPrint.focus();
+                    WinPrint.print();
+                    WinPrint.close();
+                  }
+                }]
               });
 
               $( "#detail-<?php echo $obj->Id; ?>" ).click(function() {
@@ -163,7 +187,7 @@ foreach($objs as $obj)
               });
             });
             </script>
-             <div id="dialog-<?php echo $obj->Id; ?>" title="<?php echo JText::_('COM_CATALOG_DETAILS'); ?>">
+             <div id="dialog-<?php echo $obj->Id; ?>" title="<?php echo JText::_('COM_CATALOG_DETAILS'); ?>" >
                  <?php
                 $desc="<p>".JText::_('COM_CATALOG_SHIPPING')."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_COUNTRY').": ".$profile['country']."</p>";
@@ -212,7 +236,7 @@ foreach($objs as $obj)
                                             $sub_total+=$temp_total;
                                             $ptotal = AuxTools::MoneyFormat($temp_total, $curr->CurrCode, $obj->CurrencyRate);
                                                         $punit = AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $obj->CurrencyRate);
-                                            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
+                                            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">$product->Id - ".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
                                         endfor;
                                         $html.="
                                 </table>

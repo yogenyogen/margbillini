@@ -4,7 +4,7 @@ require_once BASE_DIR . LIBS . DB . DBOBJECT;
 
 class twoCO {
 
-  protected $sid = 202234853;
+  protected $sid = 202331258;
   protected $secret='tango';
   protected $products = array(); //$products[#]['name'], $products[#]['price'], $products[#]['descrip']
   protected $test_mode = false;
@@ -303,7 +303,7 @@ class twoCO {
 
     return $this->GenerateBasicForm($sell_id) . 
            $this->GenerateProductsForm() . $this->GenerateBuyerInfo()
-           ."</form>
+           ."<p>Processing.....<img style=\"width:20px; height:20px;\" src=\"/loading.gif\"/> </p> </form>
     <script type=\"text/javascript\">
     window.onload = function(){
         document.TwoCOprocess.submit();

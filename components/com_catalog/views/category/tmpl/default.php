@@ -20,24 +20,32 @@ foreach($ro->getPathwayNames() as $p)
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
 $category = new bll_category(0);
 $root_categories = bll_category::getRootCategories();
-?>
 
-<?php 
 if(count($root_categories) > 0):    
+$keywords="";
+$index = 1;
+foreach($root_categories as $rcat)
+{
+    $index++;
+    $lval=$rcat->getLanguageValue($LangId);
+    $add=",";
+    if($index == count($rcat))
+        $add="";
+    $keywords.="".strtolower($lval->Name).$add;
+}
+$document = JFactory::getDocument();
+$document->setMetaData('keywords', $keywords);
 ?>
-<h1><?php echo JText::_('COM_CATALOG_CATALOG'); ?></h1>
-<div class="span12">
-    <h4><?php echo JText::_('COM_CATALOG_CATEGORIES'); ?></h4>
-	<div class=" row-fluid span12">
+    <h1><?php echo JText::_('COM_CATALOG_DICHROIC_SHOP'); ?></h1>
+	<div class=" no-margin-left span12">
 	        <?php
 	        $index=0;
 	        foreach($root_categories as $rcat):
 	            if($index%4 == 0 && $index > 0):    
                         ?>
                      </div>
-                    <div class="clearfix"><hr></div>
-    
-                     <div class=" span12 row-fluid">
+                    <div class="clearfix span12  no-margin-left"><hr></div>
+                     <div class=" span12 no-margin-left">
                     <?php 
                     endif;
                     $lval=$rcat->getLanguageValue($LangId);
@@ -53,11 +61,11 @@ if(count($root_categories) > 0):
                     }   
                     ?>   
                         <div class="span3">
-	                    <a href="./index.php/<?php echo $url; ?>">
+	                    <a href="<?php echo $url; ?>">
                                 <img src="<?php echo $imguri; ?>" />
                             </a>
                             <div>
-                            <a href="./index.php/<?php echo $url; ?>">
+                            <a href="<?php echo $url; ?>">
 	                    <?php 
 	                        echo $lval->Name;
 	                    ?>
@@ -70,13 +78,7 @@ if(count($root_categories) > 0):
 	        ?>
 	    </div>
 	</div>
-</div>
     <?php
-
     else:
-
         echo "<p>".JText::_('COM_CATALOG_NO_CATEGORY_AVAILABLE')."</p>";
-
     endif;
-
-?>
