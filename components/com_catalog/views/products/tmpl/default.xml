@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml 46 2010-11-21 17:27:33Z chdemko $ -->
+<metadata>
+	<layout title="COM_CATALOG_CATEGORIES_DETAIL_VIEW">
+		<message>COM_CATALOG_CATEGORIES_DETAIL_VIEW_DESC</message>
+	</layout>
+         <fields name="params">
+            <fieldset name="request">
+                <field name="cid" type="text" default="" size="40"
+                    label="Category Id"
+                    description="Id of the category to display" />
+            </fieldset>
+        </fields>
+</metadata>

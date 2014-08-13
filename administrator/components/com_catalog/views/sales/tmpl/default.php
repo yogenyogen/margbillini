@@ -194,7 +194,7 @@ foreach($objs as $obj)
                 $desc.="<p>".JText::_('COM_CATALOG_REGION').": ".$profile['region']."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_CITY').": ".$profile['city']."</p>";
                 $desc.="<p>".JText::_('COM_CATALOG_ADDRESS').": ".$profile['address1']." ".$profile['address2']."</p>";
-                $sub_total=0;
+                $temp_total=$obj->Total - $shipping->Price;
                 $html="<div style=\"background-color:#EDEDED; padding:20px; font-family:Arial !important;\">
                     <div style=\"background-color:#fff; overflow: hidden; border:1px solid #ccc; margin:0 auto; width:500px; padding:20px 30px;\">";
 
@@ -230,13 +230,28 @@ foreach($objs as $obj)
                                         for($i=0; $i< count($productsid); $i++):
                                             $product = new bll_product($productsid[$i]);
                                             $preduce=0;
+                                            $price = $product->SalePrice;
+                                            $preprice="";
+                                            $postprice="";
+                                            if($product->have_offer_price()==true)
+                                            {
+                                                $price =$product->OfferPrice;
+                                                $percent = number_format( ($product->OfferPrice / ($product->SalePrice) ) * 100, 2);
+                                                $preprice="<div style=\"font-size:10px; text-decoration:line-through;\">".AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate)."</div>";
+                                                $postprice='<div style="font-size:10px;">'.JText::_('COM_CATALOG_YOU_SAVE').": ".AuxTools::MoneyFormat($product->SalePrice-$product->OfferPrice, $curr->CurrCode, $curr->Rate)."($percent%)".'</div>';
+                                            }
                                             if($coupon->Id)
-                                                $preduce = $product->SalePrice*($coupon->Discount/100);
-                                            $temp_total = ($product->SalePrice-$preduce)*$productscant[$i];
-                                            $sub_total+=$temp_total;
-                                            $ptotal = AuxTools::MoneyFormat($temp_total, $curr->CurrCode, $obj->CurrencyRate);
-                                                        $punit = AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $obj->CurrencyRate);
-                                            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td><td><p style=\"margin:0; font-family:Arial !important;\">$product->Id - ".$product->getLanguageValue($LangId)->Name."</p></td><td>".$punit."</td><td>".$ptotal."</td></tr>";
+                                            {
+                                                $preduce = $price*($coupon->Discount/100);
+                                            }
+                                            $ptotal = AuxTools::MoneyFormat(($price-$preduce)*$productscant[$i], $curr->CurrCode, $curr->Rate);
+                                            $punit = AuxTools::MoneyFormat($price-$preduce, $curr->CurrCode, $curr->Rate);
+
+                                            $html.="<tr style=\"font-size:12px;\"><td>".$productscant[$i]."</td>"
+                                                    . "<td><p style=\"margin:0; font-family:Arial !important;\">$product->Id - ".$product->getLanguageValue($LangId)->Name."</p></td>"
+                                                    . "<td>$preprice<div>".$punit."</div>$postprice</td>"
+                                                    . "<td>".$ptotal."</td>"
+                                                 . "</tr>";
                                         endfor;
                                         $html.="
                                 </table>
@@ -247,7 +262,7 @@ foreach($objs as $obj)
                             <table align=\"right\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">
                                         <tr>
                                                 <td align=\"right\"><p style=\"margin-bottom:0px; text-align:right; font-family:Arial !important;\">". JText::_('COM_CATALOG_SUB_TOTAL').":</p></td>
-                                <td align=\"left\"><p style=\"margin-bottom:0px; font-family:Arial !important;\" id=\"sub-total\">".  AuxTools::MoneyFormat($temp_total)."</p></td>
+                                <td align=\"left\"><p style=\"margin-bottom:0px; font-family:Arial !important;\" id=\"sub-total\">".  AuxTools::MoneyFormat($temp_total, $curr->CurrCode, $curr->Rate)."</p></td>
                                         </tr>
                                         <tr>
                                                 <td align=\"right\"><p style=\"margin-bottom:0px; text-align:right; font-family:Arial !important;\">". JText::_('COM_CATALOG_SHIPPING').":</p></td>

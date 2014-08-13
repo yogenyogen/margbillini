@@ -7497,8 +7497,26 @@ div#top-right-modules form#login-form
     float:right;
 }
 
+.line-through, span.line-through
+{
+    text-decoration: line-through;
+}
+
+.red, span.red
+{
+    color: rgb(253, 2, 2);
+}
+
+.smaller-text, span.smaller-text
+{
+    font-size:11px;
+}
+
 .no-margin-left
 {
     margin-left:0%!important;
 }
+
+
+
 

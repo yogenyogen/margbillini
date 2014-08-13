@@ -1060,7 +1060,12 @@ class Form
                 $html .= "</div>";
                 break;
             case FormLayouts::FORMS_UL_LAYOUT:
-                $html .= "<ul id=\"$fname\" style=\"list-style:none;\">";
+                $html.="<style>"
+                    . "ul#$fname{"
+                        . "list-style:none;"
+                    . "}"
+                    . "</style>";
+                $html .= "<ul id=\"$fname\" >";
                 foreach ($this->fields as $f_name => $field_html) 
                 {
                     $html .= "<li>";

@@ -737,13 +737,19 @@ class AuxTools
      * @param string $curr currency code string US$, RD$, EUR
      * @param double $conver_rate convertion rate
      * @param integer $style 1 currency at left, 2 currency at right.
+     * @param integer $decimals number of decimals digits
+     * @param string  $dec_point string with the separator for decimal digits 
+     * @param string  $thousands_sep string with the separator for thousands
      * 
      * @return string formated money
      */
-    static function MoneyFormat($total, $curr=DEFAULT_CURRENCY, $conver_rate=DEFAULT_CONVERTION_RATE, $style=1)
+    static function MoneyFormat($total, $curr=DEFAULT_CURRENCY, $conver_rate=DEFAULT_CONVERTION_RATE, $style=1, 
+            $decimals=2, $dec_point='.', $thousands_sep=',')
     {
         $total_1 = $total*$conver_rate;
+        
         $total = round($total_1, 2);
+        $total = number_format($total, $decimals, $dec_point, $thousands_sep);
         switch($style)
         {
             case 1:

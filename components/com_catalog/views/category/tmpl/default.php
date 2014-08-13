@@ -11,7 +11,9 @@ $jspath = AuxTools::getJSPathFromPHPDir(BASE_DIR);
  */
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$ro=JFactory::getApplication()->getPathway();
+$app = JFactory::getApplication();
+$ro=$app->getPathway();
+
 $path = "";
 foreach($ro->getPathwayNames() as $p)
 {
@@ -35,8 +37,10 @@ foreach($root_categories as $rcat)
 }
 $document = JFactory::getDocument();
 $document->setMetaData('keywords', $keywords);
+$title=JText::_('COM_CATALOG_DICHROIC_SHOP'). ' - '.$app->get('sitename');
+$document->setTitle($title);
 ?>
-    <h1><?php echo JText::_('COM_CATALOG_DICHROIC_SHOP'); ?></h1>
+    <h1><?php echo $title; ?></h1>
 	<div class=" no-margin-left span12">
 	        <?php
 	        $index=0;

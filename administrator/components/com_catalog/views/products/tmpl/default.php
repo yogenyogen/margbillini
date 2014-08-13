@@ -5,6 +5,7 @@ defined('_JEXEC') or die('Restricted access');
 $array_pag_params=array();
 $field_params=null;
 $value_params=null;
+$lower_limit=0;
 if(isset($_REQUEST['limitstart']))
     $lower_limit=$_REQUEST['limitstart'];
 if(isset($_POST['cfid']) && $_POST['cfid'] != "")
@@ -17,7 +18,7 @@ if(isset($_POST['cfid']) && $_POST['cfid'] != "")
 $ob = new bll_product(0);
 $nelementsbypage =NUMBER_ELEMENTS_BY_PAGE;
 $total = count($ob->findAll($field_params,$value_params,true, $ob->getPrimaryKeyField()));
-$lower_limit=0;
+
 
 $objs= $ob->findAll($field_params,$value_params,true, $ob->getPrimaryKeyField(), $lower_limit, $nelementsbypage);
 
@@ -110,6 +111,7 @@ foreach($objs as $obj)
             <form method="POST" action="./index.php?option=com_catalog&view=products&layout=edit">
                  <input type="hidden"  name="id" value="<?php echo $obj->Id; ?>"/>
                  <input type="hidden" name="limitstart" value="<?php echo $lower_limit; ?>" />
+                 <input type="hidden" name="cfid" value="<?php echo $cid; ?>" />
                  <button><?php echo JText::_('COM_CATALOG_EDIT')?></button>
             </form>
             <form method="POST" action="./index.php?option=com_catalog&view=products&layout=changecategory">

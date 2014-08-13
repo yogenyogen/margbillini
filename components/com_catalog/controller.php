@@ -267,7 +267,7 @@ class CatalogController extends JControllerLegacy
         //processed by a third party
         $ret=bll_sale::createSale($Products, $uid, $pmid, $stateid, 
                 $smid, $cityid, $cid);
-        $sale = new bll_sale();
+        $sale = new bll_sale(-1);
         $lastInsertedSale = $sale->find(null,null,true,'Id');
         $msg="";
         switch($ret)
@@ -565,7 +565,7 @@ class CatalogController extends JControllerLegacy
     function twocheckout_confirmation()
     {
         $two = new twoCO();
-        $two->ActivateTestMode();
+        //$two->ActivateTestMode();//comment to turn off demo
         $hashOrder = $_REQUEST['order_number']; //2Checkout Order Number
         $hash=$_REQUEST['key'];
         $referenceCode = $_REQUEST['merchant_order_id'];
@@ -612,7 +612,14 @@ class CatalogController extends JControllerLegacy
         $total=0;
         foreach($productsid as $id => $cant):
             $product = new bll_product($id);
-            $total+=$product->SalePrice*$cant;
+            if($product->have_offer_price()==true)
+            {
+                $total+=$product->OfferPrice*$cant;
+            }
+            else
+            {
+                $total+=$product->SalePrice*$cant;
+            }
             $ptotal+=$cant;
         endforeach;
         ob_end_clean();

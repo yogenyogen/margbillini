@@ -15,7 +15,8 @@ class catalogproduct extends dbobject
     
     public $Id=0;
     public $CategoryId=0; 
-    public $SalePrice="";
+    public $SalePrice=""; 
+    public $OfferPrice="";
     public $RentPrice=""; 
     public $Address="";
     public $CreatedAt="";

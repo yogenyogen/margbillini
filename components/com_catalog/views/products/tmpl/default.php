@@ -11,12 +11,11 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$cid =0;
-if(isset($_REQUEST['cid']))
-{
-    $cid=$_REQUEST['cid'];
-}
-$ro=JFactory::getApplication()->getPathway();
+
+$app = JFactory::getApplication();
+$cid=$app->input->get('cid',0);
+
+$ro=$app->getPathway();
 
 $cat = new bll_category($cid);
 $LangId = AuxTools::GetCurrentLanguageIDJoomla();
@@ -31,11 +30,26 @@ $elements_by_page=12;
 $total = count(bll_product::find_products($cat->Id));
 
 $document = JFactory::getDocument();
-$document->setTitle($cat->getLanguageValue($LangId)->Name);
-$document->setDescription(strip_tags($cat->getLanguageValue($LangId)->Description));
+$document->setTitle($catlv->Name. ' - '.$app->get('sitename'));
+$document->setDescription(strip_tags($catlv->Description));
 $products = bll_product::find_products($cat->Id,$limitstart, $elements_by_page);
 
 $curr = bll_currencies::getActiveCurrency();
+
+if(strlen($cat->ImageUrl)> 4)
+    $catimage = $cat->ImageUrl;
+else
+    $catimage='./components/com_catalog/images/no-image-listing-detail.jpg';
+$base_uri = JUri::base();
+$current_uri  =  JUri::current();
+$document->addHeadLink($current_uri,'canonical');
+$ctags = '
+<meta property="og:title" content="'.$catlv->Name.'" />
+<meta property="og:description" content="'.strip_tags($catlv->Description).'" />
+<meta property="og:image" content="'.$base_uri.DS.$catimage.'" />
+<meta property="og:site_name" content="'.$base_uri.'" />
+<meta property="og:url" content="'.$current_uri.'" />';
+$document->addCustomTag($ctags);
 
 if($total > 0){
 ?>
@@ -69,9 +83,25 @@ if($total > 0){
                 <div>
                     <h3><a href="<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$product->Id.html" ?>"><?php echo $lval->Name; ?></a></h3>
                 </div>
-                <div>
+                <div class="price">
                     <?php 
-                    echo AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
+                    $sale_price=AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
+                    if($product->have_offer_price()==true)
+                    {
+                        $offer_price=AuxTools::MoneyFormat($product->OfferPrice, $curr->CurrCode, $curr->Rate);
+                        $percent = ($product->SalePrice*100) / $product->OfferPrice;
+                        ?>
+                            <span class="line-through smaller-text"><?php echo $sale_price; ?></span> <span class="red"><?php echo $offer_price; ?></span> 
+                        
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                            <span class="red"><?php echo $sale_price; ?></span>
+                        
+                        <?php
+                    }
                     ?>
                 </div>
             </div>

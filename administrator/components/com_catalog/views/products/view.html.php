@@ -70,7 +70,6 @@ class CatalogViewProducts extends JViewLegacy
                                 $type_msg='error';
                                 $action_msg =JText::_('COM_CATALOG_ERROR_EDITING');
                             }
-
                         }
                         else
                         { 
@@ -84,15 +83,13 @@ class CatalogViewProducts extends JViewLegacy
                                 $type_msg='error';
                             }
 
-                            $what_msg  =" ". JText::_('COM_CATALOG_PRODUCT'); 
-                            JFactory::getApplication()->enqueueMessage(
-                                    $action_msg.$what_msg,
-                                    $type_msg
-
-                            );
-
                         }
+ 
+                        JFactory::getApplication()->enqueueMessage(
+                                $action_msg,
+                                $type_msg
 
+                        );
                     break;
 
 

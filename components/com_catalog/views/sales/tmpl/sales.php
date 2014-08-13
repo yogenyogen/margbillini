@@ -97,9 +97,16 @@ foreach($objs as $obj)
                 for($i=0; $i< count($productsid); $i++):
                     $product = new bll_product($productsid[$i]);
                     $preduce=0;
+                    $price = $product->SalePrice;
+                    if($product->have_offer_price()==true)
+                    {
+                        $price =$product->OfferPrice;
+                    }
                     if($coupon->Id)
-                        $preduce = $product->SalePrice*($coupon->Discount/100);
-                    $ptotal = ($product->SalePrice-$preduce)*$productscant[$i];
+                    {
+                        $preduce = $price*($coupon->Discount/100);
+                    }
+                    $ptotal = ($price-$preduce)*$productscant[$i];
                     $sale_total+=$ptotal;
                     ?>
                     <p><?php echo JText::_('COM_CATALOG_PRODUCT'); ?></p>
@@ -110,7 +117,6 @@ foreach($objs as $obj)
 
                 endfor;
                 ?>
-
                     <p>
                         <?php echo JText::_('COM_CATALOG_PAYMENT_METHOD'); ?>:
                         <?php  echo $payment->getLanguageValue($LangId)->Name; ?>
@@ -124,8 +130,7 @@ foreach($objs as $obj)
                     <p><?php echo JText::_('COM_CATALOG_TOTAL'); ?>:
                         <span id="total"><?php echo AuxTools::MoneyFormat($sale_total+$shipping->Price, $curr->CurrCode, $obj->CurrencyRate); ?></span>
                     </p>
-             </div>
-            
+            </div>            
             <button class="btn" id="detail-<?php echo $obj->Id; ?>">
                 <span class="icon-list"></span>
                 <?php echo JText::_('COM_CATALOG_DETAILS'); ?>

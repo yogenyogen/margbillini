@@ -1161,5 +1161,31 @@ class bll_product extends catalogproduct {
         return $psales;
     }
     
+    /**
+     * Gets the price of the product
+     * @return double
+     */
+    public function get_price()
+    {
+        if($this->OfferPrice != "" && $this->OfferPrice > 0.0 && $this->OfferPrice < $this->SalePrice)
+        {
+            return $this->OfferPrice;
+        }
+        return $this->SalePrice;
+    }
+    
+    /**
+     * Gets the price of the product
+     * @return boolean true if the product is in offer
+     */
+    public function have_offer_price()
+    {
+        if($this->OfferPrice > 0.0 && $this->OfferPrice < $this->SalePrice)
+        {
+            return true;
+        }
+        return false;
+    }
+    
 }
 

@@ -123,7 +123,7 @@ $locations= country::getLocationTree();
         {
         ?>
         jQuery.ajax(
-            {url:'/index.php?option=com_users&view=login&login_redirect_uri=<?php echo urlencode('/index.php?option=com_catalog&view=sales&redirect=1&cid='.$cid);?>&tmpl=component'}
+            {url:'/index.php?option=com_users&view=login&login_redirect_uri=<?php echo urlencode(JRoute::_('/index.php?option=com_catalog&view=sales').'&redirect=1&cid='.$cid);?>&tmpl=component'}
           ).done(function(data){
               var str=data;
               var arr=str.split("</head>");
@@ -656,7 +656,7 @@ $locations= country::getLocationTree();
             foreach($smethods as $shipping)
             {
 
-                echo '<input disabled="disabled" required="required" onchange="shipping()" id="sm_'.$shipping->Id.'" type="radio" name="smid" value="'.$shipping->Id.'" /> <label>'.$shipping->getLanguageValue($LangId)->Name.''.AuxTools::MoneyFormat($shipping->Price,$curr->CurrCode, $curr->Rate).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
+                echo '<input disabled="disabled" required="required" onchange="shipping()" id="sm_'.$shipping->Id.'" type="radio" name="smid" value="'.$shipping->Id.'" /> <label>'.$shipping->getLanguageValue($LangId)->Name.' - '.AuxTools::MoneyFormat($shipping->Price,$curr->CurrCode, $curr->Rate).''.'</label><div class="desc_ship">'.$shipping->getLanguageValue($LangId)->Description.'</div><hr/>';
 
             }
 
@@ -721,43 +721,32 @@ $locations= country::getLocationTree();
 			<th><p><?php echo JText::_('COM_CATALOG_TOTAL'); ?></p></th>
 
 			</tr>
-
-			
-
 					<?php 
-
 			        for($i=0; $i< count($productsid); $i++):
-
 			            $product = new bll_product($productsid[$i]);
-
                                     if($productscant[$i] <= 0)
-
                                         continue;
 
 			            $preduce=0;
-
+                                    
+                                    $price = $product->SalePrice;
+                                    if($product->have_offer_price()==true)
+                                    {
+                                        $price =$product->OfferPrice;
+                                    }
 			            if($coupon->Id)
-
-			                $preduce = $product->SalePrice*($coupon->Discount/100);
-
-			            $ptotal = AuxTools::MoneyFormat(($product->SalePrice-$preduce)*$productscant[$i], $curr->CurrCode, $curr->Rate);
-
-						$punit = AuxTools::MoneyFormat($product->SalePrice-$preduce, $curr->CurrCode, $curr->Rate);
+                                    {
+			                $preduce = $price*($coupon->Discount/100);
+                                    }
+			            $ptotal = AuxTools::MoneyFormat(($price-$preduce)*$productscant[$i], $curr->CurrCode, $curr->Rate);
+				    $punit = AuxTools::MoneyFormat($price-$preduce, $curr->CurrCode, $curr->Rate);
 
 			            ?>
-
 						<tr>
-
 							<td>
-
-			            <input type="hidden" name="p[]" value="<?php echo $productsid[$i]; ?>" />
-
-			            <input type="hidden" name="pc[]" value="<?php echo $productscant[$i]; ?>" />
-
-
-
-			            <p class="title_plan">
-
+                                        <input type="hidden" name="p[]" value="<?php echo $productsid[$i]; ?>" />
+                                        <input type="hidden" name="pc[]" value="<?php echo $productscant[$i]; ?>" />
+                                        <p class="title_plan">
 			                <?php echo $product->getLanguageValue($LangId)->Name; ?>
 
 			            </p>

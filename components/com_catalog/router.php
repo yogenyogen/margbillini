@@ -18,14 +18,14 @@ $language_tag = AuxTools::GetCurrentLanguageJoomla();
 $reload = true;
 $lang->load($extension, $admin_root, $language_tag, $reload);
 
-function catalogBuildRoute(&$query) {
-  
-  return array();
+function catalogBuildRoute($query) {
+   return array();
 }
 
 function CatalogParseRoute($segments) 
 {
     $search_view_needle= strtolower(JText::_('COM_CATALOG_SEARCH_NEEDLE'));
+    
     $vars = array();
     $search_view = false;
     if(isset($segments[0]))
@@ -95,30 +95,13 @@ function CatalogParseRoute($segments)
         break;
         default:
             //default view
-//            $vars['option'] = "com_catalog";
-//            $vars['view'] = "category";
-//            $vars['layout'] = "default";
+            $lang = new languages(AuxTools::GetCurrentLanguageIDJoomla());
+            $redirect=$lang->sef.DS.JText::_('COM_CATALOG_CATALOG_NEEDLE');
+            //die($redirect);
+            JFactory::getApplication()->redirect($redirect,true);
         break;
     }
     
     
     return $vars;
 }
-
-function normalize($string) {
-  $trans = array(
-      'Á' => 'A', 'À' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Å' => 'A', 'Ä' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
-      'É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Í' => 'I', 'Ì' => 'I', 'Î' => 'I', 'Í' => 'I', 'ð' => 'Eth',
-      'Ñ' => 'N', 'Ó' => 'O', 'Ò' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O',
-      'Ú' => 'U', 'Ù' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y',
-      'á' => 'a', 'à' => 'a', 'â' => 'a', 'ã' => 'a', 'å' => 'a', 'ä' => 'a', 'æ' => 'ae', 'ç' => 'c',
-      'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'eth',
-      'ñ' => 'n', 'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o',
-      'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y',
-      'ß' => 'sz', 'þ' => 'thorn', 'ÿ' => 'y', "1" => "", "2" => "", "3" => "", "4" => "", "5" => "", "6" => "", "7" => "",
-      "8" => "", "9" => "", "¡" => "", "¿" => "", "®" => "", "," => "", "." => "", "-" => "", "?" => "", "@" => ""
-  );
-  return strtolower(strtr(trim($string), $trans));
-}
-
-?>

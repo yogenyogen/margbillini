@@ -4,10 +4,13 @@
 defined('_JEXEC') or die('Restricted access');
 
 $id=0;
-
+$cfid = "";
 if(isset($_POST['id']))
     $id=$_POST['id'];
-
+if(isset($_POST['cfid']) && $_POST['cfid'] != "")
+{
+    $cfid=$_POST['cfid'];
+}
 $lower_limit=0;
 if(isset($_REQUEST['limitstart']))
     $lower_limit=$_REQUEST['limitstart'];
@@ -190,7 +193,7 @@ else
         $form->Hidden('Id', $obj->Id);
 
     $form->Hidden('CategoryId', $obj->CategoryId);
-
+    $form->Hidden('cfid', $cfid);
     $form->Hidden('action', 'edit', '', '');
     $tab_top_html='<script type="text/javascript">
   jQuery(function() {
@@ -232,6 +235,8 @@ else
 
     $form->Label(JText::_('COM_CATALOG_SALE_PRICE')."(".DEFAULT_CURRENCY.")", 'SalePrice');
     $form->Text('SalePrice', $obj->SalePrice);
+    $form->Label(JText::_('Offer price')."(".DEFAULT_CURRENCY.")", 'OfferPrice');
+    $form->Text('OfferPrice', $obj->OfferPrice);
     $form->HTML($obj->GenerateFormFields());
     foreach($images as $image)
     {

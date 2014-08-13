@@ -119,20 +119,33 @@ if(isset($_GET['cid']))
         if($p->Id > 0)
         {
             $lval = $p->getLanguageValue($LangId);
-            $price=$p->SalePrice;
-            $ptotal+= $p->SalePrice*$cant;
+            if($p->have_offer_price()==true)
+            {
+                $price = $p->OfferPrice;
+                $ptotal+=$p->OfferPrice*$cant;
+            }
+            else
+            {
+                $price = $p->SalePrice;
+                $ptotal+=$p->SalePrice*$cant;
+            }
             ?>
-             <div class="span5">
+            <div class="span12">
+             <div class="span6">
                  <?php 
                 $img = $p->getMainImage();
-                $lval = $p->getLanguageValue($LangId);
                 if(strlen($img->ImageUrl)> 4)
                     $image = $img->ImageThumb;
                 else
                     $image='./components/com_catalog/images/no-image-listing-detail.jpg';
                 ?>
+                 <a href="<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$p->Id.html" ?>">
                  <img style="height:100px;" class="cart-image" src="<?php echo $image; ?>" />
-                 <h4><?php echo $lval->Name; ?></h4>
+                 </a>
+                 <h3><a href="<?php echo DS.JText::_('COM_CATALOG_CATALOG_NEEDLE').DS.AuxTools::SEFReady($lval->Name)."-$p->Id.html" ?>">
+                 <?php echo $lval->Name; ?>
+                     </a>
+                 </h3>
                  <input type="hidden" name="p[]" value="<?php echo $p->Id ?>" />
                  <input type="hidden" id="price_<?php echo $p->Id ?>" name="price[]" value="<?php echo $p->SalePrice; ?>" />
              </div>
@@ -152,6 +165,7 @@ if(isset($_GET['cid']))
                  </div>
                
              </div>
+            </div>
             <?php
             $total+=$ptotal;
         }

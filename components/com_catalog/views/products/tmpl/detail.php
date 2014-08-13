@@ -1,5 +1,6 @@
 <?php
 $id =0;
+$app = JFactory::getApplication();
 if(isset($_REQUEST['pid']))
 {
     $id=$_REQUEST['pid'];
@@ -12,7 +13,7 @@ $images = $product->getImages();
 $lval = $product->getLanguageValue($LangId);
 
 $document = JFactory::getDocument();
-$document->setTitle($lval->Name);
+$document->setTitle($lval->Name. ' - '.$app->get('sitename') );
 $document->setDescription(strip_tags($lval->Description));
 if(strlen($img->ImageUrl)> 4)
     $image = $img->ImageUrl;
@@ -21,6 +22,17 @@ else
 
 $curr = bll_currencies::getActiveCurrency();
 $document->addStyleSheet('./templates/marg/css/pikachoose/bottom.css');
+$base_uri = JUri::base();
+$current_uri  =  JUri::current();
+$document->addHeadLink($current_uri,'canonical');
+$ctags = '
+<meta property="og:title" content="'.$lval->Name.'" />
+<meta property="og:description" content="'.strip_tags($lval->Description).'" />
+<meta property="og:image" content="'.$base_uri.DS.$image.'" />
+<meta property="og:site_name" content="'.$base_uri.'" />
+<meta property="og:url" content="'.$current_uri.'" />';
+$document->addCustomTag($ctags);
+
 ?>
 <script type="text/javascript" src="./pikachoose/lib/jquery.jcarousel.min.js"></script>
 <script type="text/javascript" src="./pikachoose/lib/jquery.pikachoose.min.js"></script>
@@ -60,7 +72,23 @@ function addproduct(pid)
         }
     ).done(function( data, textStatus, jqXHR) {
             var c=data;
-            var price = "<?php echo $product->SalePrice; ?>";
+            
+            <?php 
+            if($product->have_offer_price()==true)
+            {
+                ?>
+                var price = "<?php echo $product->OfferPrice; ?>";
+                <?php
+            }
+            else 
+            {
+                ?>
+                var price = "<?php echo $product->SalePrice; ?>";
+                <?php
+            }
+            ?>
+            
+            
             var curr = "<?php echo $curr->CurrCode; ?>";
             var curr_rate=<?php echo $curr->Rate ?>;
             var str=cant+" x "+curr+((cant*price)*curr_rate);
@@ -83,7 +111,7 @@ function addproduct(pid)
         
     </div>
     <a class="button" onclick="$( '#dialog' ).dialog( 'close' );"><?php echo JText::_('COM_CATALOG_KEEP_BUYING') ?></a>
-    <a class="button" href="index.php?option=com_catalog&view=sales"><?php echo JText::_('COM_CATALOG_CHECKOUT') ?></a>
+    <a class="button" href="<?php echo JRoute::_('index.php?option=com_catalog&view=sales'); ?>"><?php echo JText::_('COM_CATALOG_CHECKOUT') ?></a>
 </div>
  <div style="display:none;" id="list-product-detail-<?php echo $product->Id ?>">
      <img class="span4" id="image-popup" src="<?php echo $image; ?>" />
@@ -130,19 +158,38 @@ function addproduct(pid)
     </div>
     <div class="span6">
         <div class="description span12">
+            <p>
             <?php 
             echo $lval->Description;
             ?>
+            </p>
         </div>
         <div class="span12">
                 <input id="quantity" class="number_qty" value="1" type="hidden" name="quantity" min="1" max="15">
         
         <hr/>        
-        <p class="price">
+        <div class="price">
                 <?php 
-                echo AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
-                ?>
-        </p>
+                    $sale_price=AuxTools::MoneyFormat($product->SalePrice, $curr->CurrCode, $curr->Rate);
+                    if($product->have_offer_price()==true)
+                    {
+                        $offer_price=AuxTools::MoneyFormat($product->OfferPrice, $curr->CurrCode, $curr->Rate);
+                        $percent = number_format( ($product->OfferPrice / ($product->SalePrice) ) * 100, 2);
+                        ?>
+                            <div class="smaller-text"><span class="line-through "><?php echo $sale_price; ?></span></div> 
+                            <div class="red"><?php echo $offer_price; ?></div> 
+                            <div class="red smaller-text"><?php echo JText::_('COM_CATALOG_YOU_SAVE').": ".AuxTools::MoneyFormat($product->SalePrice-$product->OfferPrice, $curr->CurrCode, $curr->Rate)."($percent%)"; ?></div>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                            <span class="red"><?php echo $sale_price; ?></span>
+                        
+                        <?php
+                    }
+                    ?>
+        </div>
         <?php if(count(bll_product::check_product_sales($product->Id)) <= 0): ?>
         <button type="button" id="order" href="#" onclick="return addproduct(<?php echo $product->Id; ?>);">
                 <?php echo JText::_('COM_CATALOG_ORDER') ?><i class="fa fa-shopping-cart fa-3x"></i>

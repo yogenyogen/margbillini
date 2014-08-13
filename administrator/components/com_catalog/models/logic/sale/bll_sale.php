@@ -70,8 +70,14 @@ class bll_sale extends catalogsale {
                 return -6;
             $prod[]=$pro;
             $price=$pro->SalePrice;
+            if($pro->have_offer_price()==true)
+            {
+               $price = $pro->OfferPrice;
+            }
             if($coupon->Id > 0)
-                $price = $pro->SalePrice - ($pro->SalePrice*($coupon->Discount/100));
+            {
+                $price = $price - ($price*($coupon->Discount/100));
+            }
             $total+=$price*$cant;
         }
         $total+= $shipping->Price;
@@ -81,7 +87,9 @@ class bll_sale extends catalogsale {
         $date=$prop['date'];
         //set data
         if($coupon->Id > 0)
-        $sale->CouponId = $coupon->Id;
+        {
+            $sale->CouponId = $coupon->Id;
+        }
         else
         {
             $sale->CouponId = NULL;
@@ -129,7 +137,7 @@ class bll_sale extends catalogsale {
     private static function process2Checkout($sale, $Products, $shipping, $coupon)
     {
         $twoCO = new twoCO();
-        $twoCO->ActivateTestMode();
+        //$twoCO->ActivateTestMode();//comment to turn off demo
         $user= JFactory::getUser($sale->UserId);
         $profile = JUserHelper::getProfile($user->id)->getProperties();
         $profile = $profile['profile'];
@@ -163,8 +171,15 @@ class bll_sale extends catalogsale {
             $p = new bll_product($pid);
             $plval = $p->getLanguageValue($LangId);
             $price=$p->SalePrice;
+            
+            if($p->have_offer_price()==true)
+            {
+               $price = $p->OfferPrice;
+            }
             if($coupon->Id > 0)
-                $price = $p->SalePrice - ($p->SalePrice*($coupon->Discount/100));
+            {
+                $price = $price - ($price*($coupon->Discount/100));
+            }
             $twoCO->AddProduct($plval->Name, $price, $cant, $plval->Description);
         }
         $slval = $shipping->getLanguageValue($LangId);
@@ -216,8 +231,14 @@ class bll_sale extends catalogsale {
             $p = new bll_product($pid);
             $plval = $p->getLanguageValue($LangId);
             $price=$p->SalePrice * $cant;
+            if($p->have_offer_price()==true)
+            {
+               $price = $p->OfferPrice;
+            }
             if($coupon->Id > 0)
-                $price = ($p->SalePrice * $cant) - ($p->SalePrice*($coupon->Discount/100));
+            {
+                $price = $price - ($price*($coupon->Discount/100));
+            }
             $payulatam->amount+=$price;
             $payulatam->extra1.=$plval->Name."\n";
         }
